@@ -34,7 +34,7 @@ String wifiData="";
 #define PASSW "KYARALIBY"
 char* ssid = "OzonoQuitoLed";
 char* password = "OzonoQuitoLed";
-int pausa=1000;
+int pausa=5000;
 int minActual = 0;
 //int redLed =16;
 //int ozono = 14;
