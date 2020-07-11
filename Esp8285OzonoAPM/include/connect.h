@@ -32,10 +32,6 @@ if(caso){
    return (WiFi.status() == WL_CONNECTED);
      }
       
-      
-    
-  
-  //#else
 }
 else{
   Serial.println("Creando Acces Point");

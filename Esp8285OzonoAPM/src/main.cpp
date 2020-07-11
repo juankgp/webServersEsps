@@ -1,13 +1,11 @@
 #include <Arduino.h>
 #include <FS.h>
-
 #include <TimeLib.h>
 #include <EEPROM.h>
 #include <TimeAlarms.h>
 #include <DS3232RTC.h>     
 #include <Streaming.h>      
 #include <Wire.h>
-
 #include "ota.h"
 
 int addr = 0;
