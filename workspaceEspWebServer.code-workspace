@@ -8,6 +8,9 @@
 		},
 		{
 			"path": "Esp8285OzonoHumo"
+		},
+		{
+			"path": "PruebaEsp07"
 		}
 	],
     "settings": {}
