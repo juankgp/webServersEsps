@@ -1,12 +1,13 @@
 #include <Arduino.h>
 #include <FS.h>
+
 #include <TimeLib.h>
 #include <EEPROM.h>
 #include <TimeAlarms.h>
 #include <DS3232RTC.h>     
 #include <Streaming.h>      
 #include <Wire.h>
-#include "requests.h"
+
 #include "ota.h"
 
 int addr = 0;
@@ -17,12 +18,9 @@ int totaltEspera = 0;
 
 int cambioluz=0;
 
-#define MYSSID "FLA GUTIERREZ"
-#define PASSW "KYARALIBY"
-
-
 
 void setup() {
+
 #pragma region //Configuracio
   Serial.begin(115200);
   pinMode(ozono,OUTPUT);//ozono
@@ -104,7 +102,7 @@ readtxt();
 
   #pragma endregion
  
-
+  requests();
   //*****************************************************
   Alarm.timerOnce(timeInit*multipliSeg, AlarmFunctionON);
   alarmWork=Alarm.timerOnce(timeTrabajo*multipliSeg, AlarmDisableWork);

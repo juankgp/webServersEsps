@@ -1,7 +1,7 @@
 #include <Updater.h>
 #include <ESP8266mDNS.h>
 #include <Hash.h>
-
+#include "requests.h"
 char* ssid = "esp8285";
 char* password = "esp8285pass";
 String wifiData="";
