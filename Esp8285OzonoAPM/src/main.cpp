@@ -15,20 +15,10 @@ int totalMin = 0;
 int totalSeg = 0;
 int totaltEspera = 0;
 
-
-//DS3232RTC RTC;
-
-
-
-
-//DNSServer dns;
-
 int cambioluz=0;
 
 #define MYSSID "FLA GUTIERREZ"
 #define PASSW "KYARALIBY"
-
-int pausa=5000;
 
 
 

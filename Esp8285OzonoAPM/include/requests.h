@@ -1,5 +1,6 @@
 #include <DS3232RTC.h>   
 #include <ESPAsyncWebServer.h> 
+#include "pinout.h"
 const char* PARAM_INPUT_1 = "state";
 const char* PARAM_INPUT_2 = "value";
 DS3232RTC RTC;
@@ -11,13 +12,7 @@ File myFile;
 
 const char* myFilePath = "/wifi.txt";
 int minActual = 0;
-int humo = 2;
-int vent1 = 14;
-int vent2 =16;
-int vent3 = 12;
-int vent4 = 13;
-int luces = 4;
-int ozono = 5;//ozono
+
 int timeInit = 2;
 int timeHumo = 1;
 int timeEspera = 1;
