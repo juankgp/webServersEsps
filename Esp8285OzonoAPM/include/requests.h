@@ -1,4 +1,5 @@
-#include <DS3232RTC.h>    
+#include <DS3232RTC.h>   
+#include <ESPAsyncWebServer.h> 
 const char* PARAM_INPUT_1 = "state";
 const char* PARAM_INPUT_2 = "value";
 DS3232RTC RTC;
@@ -7,6 +8,7 @@ boolean work = true;
 AlarmId alarmWork, alarmEspera;
 AsyncWebServer server(80);
 File myFile;
+
 const char* myFilePath = "/wifi.txt";
 int minActual = 0;
 int humo = 2;
