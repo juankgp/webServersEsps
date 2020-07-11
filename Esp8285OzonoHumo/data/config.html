@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="stylecfg.css">
+    <title>Config1</title>
+</head>
+<body onload="startTime()">
+
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="/index">Inicio</a>
+        <a href="/config">Configuración</a>
+      </div>
+      
+      <span style=" color: aliceblue; font-size:30px;cursor:pointer" onclick="openNav()">&#9776; Menú</span>
+    <h1 class="titulo">Configuración del Reloj</h1>
+    <div id="clockdate">
+        <div class="clockdate-wrapper">
+          <div id="clock"></div>
+          <div id="date"></div>
+        </div>
+      </div>
+      <div class="container">
+        <div class="center">
+            <a href="" id="variableTime"><button class="myButton" onclick="getTime(this)">Sincronizar Reloj</button></a>
+        </div>
+    </div>
+       
+    <h1 class="titulo">Configuración de Red WiFi</h1>
+    <div class="container">
+        <div class="center">
+            <table>
+                <tr>
+                    <th>Nombre de la Red</th>
+                    <th>Contraseña</th>
+                </tr>
+                <tr>
+                    <td> <input type="text" id="ssid" value=""  ></td>
+                    <td> <input type="password" id="pass" value="" ></td>
+                </tr>
+            </table>
+           
+           
+        </div>
+    </div>
+    <div  class="container">
+        <div class="center"> 
+            <a href="" id="sendWifiData"><button class="myButton" onclick="getData(this)" >Conectar</button></a>
+        </div>
+    </div>
+    <h1 class="titulo">Set Tiempo de Trabajo</h1>
+    <div class="container">
+        <div class="center">
+            <table>
+                <tr>
+                    <th>Tiempo en Minutos</th>
+                    
+                </tr>
+                <tr>
+                    <td> <input type="number" id="tiempoTrab" value=""  ></td>
+                    
+                </tr>
+            </table>
+           
+           
+        </div>
+    </div>
+    
+    <div  class="container">
+        <div class="center"> 
+            <a href="" id="sendTime"><button class="myButton" onclick="getTiempo(this)" >Set Time</button></a>
+        </div>
+    </div>
+   <!-- <h1 class="titulo">Test Ozono</h1>
+    <div  class="container">
+        <div class="center"> 
+            <a href="/onozono" ><button class="myButton" >OZONO ON</button></a>
+            <a href="offozono" ><button class="myButton">OZONO OFF</button></a>
+        </div>
+    </div>-->
+    
+   
+
+   
+
+    
+</body>
+<script>
+   
+   
+
+
+
+
+    function getTime(element) {
+        var d = new Date(); 
+        var hora = d.getHours();
+        var minute = d.getMinutes();
+        var second = d.getSeconds();
+        var dia = d.getDate();
+        var mes = d.getMonth();
+        var anio = d.getUTCFullYear();
+        var totalTime = anio + ":" + mes + ":" + dia + ":" + hora + ":" + minute + ":" + second
+        
+        var varTime = document.getElementById("variableTime");
+        varTime.setAttribute("href", "/ini?value=" + totalTime)
+        window.location = "/config";
+        return false;
+
+    }
+    function getData(element) {
+        var ssid = document.getElementById("ssid").value;
+        var pass = document.getElementById("pass").value;
+      
+        var varTime = document.getElementById("sendWifiData");
+        var datawifi = ssid + ":" + pass + ":";
+        varTime.setAttribute("href", "/wifidata?value=" + datawifi)
+        window.location = "/config";
+        return false;
+
+    }
+    function getTiempo(element) {
+        var ttrab = document.getElementById("tiempoTrab").value;
+        
+        var datatiempo = ttrab;
+        var varTime = document.getElementById("sendTime");
+        varTime.setAttribute("href", "/tiempodata?value=" + datatiempo)
+        window.location = "/config";
+        return false;
+
+    }
+    function openNav() {
+      document.getElementById("mySidenav").style.width = "250px";
+    }
+    
+    function closeNav() {
+      document.getElementById("mySidenav").style.width = "0";
+    }
+    function startTime() {
+    var today = new Date();
+    var hr = today.getHours();
+    var min = today.getMinutes();
+    var sec = today.getSeconds();
+    ap = (hr < 12) ? "<span>AM</span>" : "<span>PM</span>";
+    hr = (hr == 0) ? hr : hr;
+    hr = (hr > 12) ? hr  : hr;
+    //Add a zero in front of numbers<10
+    hr = checkTime(hr);
+    min = checkTime(min);
+    sec = checkTime(sec);
+    document.getElementById("clock").innerHTML = hr + ":" + min + ":" + sec + " " ;
+    
+    var months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Deciembre'];
+    var days = ['Dom', 'Lun', 'Mar', 'Mier', 'Jue', 'Vie', 'Sab'];
+    var curWeekDay = days[today.getDay()];
+    var curDay = today.getDate();
+    var curMonth = months[today.getMonth()];
+    var curYear = today.getFullYear();
+    var date = curWeekDay+", "+curDay+" "+curMonth+" "+curYear;
+    document.getElementById("date").innerHTML = date;
+    
+    var time = setTimeout(function(){ startTime() }, 500);
+}
+function checkTime(i) {
+    if (i < 10) {
+        i = "0" + i;
+    }
+    return i;
+}
+setInterval(function() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            
+           
+        }
+    };  
+    xhttp.open("GET", "/config", true);   
+    xhttp.send();
+
+    }, 1000);
+</script>
+</html>
