@@ -57,19 +57,7 @@ int timeTrabajo = 10;//default
 boolean work = true;
 AlarmId alarmWork, alarmEspera;
 
-/*#define LOCALSERVER "yes"//comentar para conectarse a una redfs.h
- 
 
-
-#ifdef LOCALSERVER
- const char* ssid = "esp8285";
- const char* password = "esp8285pass";
-#else
-  #define MYSSID "FLA GUTIERREZ"
-  #define PASSW "KYARALIBY"
-  
-#endif
-*/
 void writetxt(String datos){
    myFile = SPIFFS.open(myFilePath, "w");
   if (myFile.print(datos)){
@@ -233,18 +221,7 @@ boolean webInit() {
 }
 
 String processor(const String& var){
- //Serial.println("VAr"+var);
-  // if(var == "STATE"){
-  //   if(digitalRead(ledPin)){
-  //     ledState = "ON";
-  //   }
-  //   else{
-  //     ledState = "OFF";
-  //   }
-  //   //Serial.println(ledState);
-  //   return ledState;
-  // }
-  // else 
+
   if(var == "TIMEUC"){
     String data;
     return data;
@@ -263,6 +240,7 @@ void AlarmFunctionON(){
   if (work)
   {
     digitalWrite(humo,HIGH);
+    digitalWrite(ozono,LOW);
     digitalWrite(vent1,LOW);
     digitalWrite(vent2,LOW);
     digitalWrite(vent3,LOW);
@@ -323,9 +301,7 @@ void setup() {
 
   Wire.begin(9, 10);
 
-  //AsyncWiFiManager wifiManager(&server,&dns);
-  //wifiManager.resetSettings();
- // wifiManager.autoConnect("testAPJK", "juank123");
+
 if(!SPIFFS.begin()){
         Serial.println("An Error has occurred while mounting SPIFFS");
         return;
@@ -339,9 +315,7 @@ readtxt();
   int seppass = wifiData.indexOf(":",sepssid+1);
   String ssidtext = wifiData.substring(0,sepssid);
   String passtext = wifiData.substring(sepssid+1,seppass);
-  //Serial.println("datos" + ssidtext + "---" +passtext);
-  //ssidtext = "FLA GUTIERREZ";
-  //passtext = "KYARALIBY";
+
 
 
  #ifdef ESP8266
@@ -360,14 +334,7 @@ readtxt();
    //digitalWrite(redLed,HIGH);
   MDNS.begin(host);
   if(webInit()) MDNS.addService("http", "tcp", 80);
-  /*  tmElements_t tm;
-     tm.Hour = 00;               // set the RTC to an arbitrary time
-     tm.Minute = 05;
-     tm.Second = 00;
-     tm.Day = 04;
-     tm.Month = 07;
-     tm.Year = 2020 - 1970;      // tmElements_t.Year is the offset from 1970
-     RTC.write(tm);*/     
+
   setSyncProvider(RTC.get);
 	setSyncInterval(300);
 
