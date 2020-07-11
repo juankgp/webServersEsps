@@ -1,0 +1,14 @@
+{
+    "folders": [
+		{
+			"path": "Esp8285OzonoAPM"
+		},
+		{
+			"path": "Esp8285WebServerCOOL"
+		},
+		{
+			"path": "Esp8285OzonoHumo"
+		}
+	],
+    "settings": {}
+}
