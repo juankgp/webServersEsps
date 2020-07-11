@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="stylecfg.css">
+    <link rel="icon" href="logoVDT16.png" type="image/png" sizes="16x16">
+    <title>ConfigPpreferente</title>
+</head>
+<body >
+
+    <h1 class="titulo">Configuración de tiempos de Puerta</h1>
+    
+       
+    <p class="subtitulo">Tiempos Actuales:<strong> %STATE%</strong></p>
+    <div class="container">
+        <div class="center">
+            <table>
+                <tr>
+                    <th>Tiempo Abierto</th>
+                    <th>Tiempo de espera Cierre</th>
+                </tr>
+                <tr>
+                    <td> <input type="text" id="topen" value=""  ></td>
+                    <td> <input type="text" id="twait" value="" ></td>
+                </tr>
+            </table>
+           
+           
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="center">
+            <a href="" id="variableTime"><button class="myButton" onclick="getData(this)">Setear Tiempos</button></a>
+        </div>
+    </div>
+    <h1 class="titulo">Configuración de Red WiFi</h1>
+    <div class="container">
+        <div class="center">
+            <table>
+                <tr>
+                    <th>Nombre de la Red</th>
+                    <th>Contraseña</th>
+                </tr>
+                <tr>
+                    <td> <input type="text" id="ssid" value=""  ></td>
+                    <td> <input type="password" id="pass" value="" ></td>
+                </tr>
+            </table>
+           
+           
+        </div>
+    </div>
+    
+    <div  class="container">
+        <div class="center"> 
+            <a href="" id="sendWifiData"><button class="myButton" onclick="getDataWifi(this)" >Conectar</button></a>
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <div class="container">
+        <div class="center">
+            <table>
+                <tr>
+                    <th>Estado Puerta</th>
+                    <th>Estado Espera</th>
+                    <th>Estado sensor</th>
+                </tr>
+                <tr>
+                    <td><p  class="" id="indicadorPuerta"></p></td>
+                    <td><p  class="" id="indicadorEspera"></p></td>
+                    <td><p  class="" id="indicadorSensor"></p></td>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+  
+</body>
+<script>
+
+function getData(element) {
+        var topen = document.getElementById("topen").value;
+        var twait = document.getElementById("twait").value;
+        var dataTime = topen + ":" + twait + ":";
+        var varTime = document.getElementById("variableTime");
+        varTime.setAttribute("href", "/timedata?value=" + dataTime)
+        window.location = "/config";
+        return false;
+
+}
+function getDataWifi(element) {
+        var ssid = document.getElementById("ssid").value;
+        var pass = document.getElementById("pass").value;
+      
+        var varTime = document.getElementById("sendWifiData");
+        var datawifi = ssid + ":" + pass + ":";
+        varTime.setAttribute("href", "/wifidata?value=" + datawifi)
+        window.location = "/config";
+        return false;
+
+    }
+    function openNav() {
+      document.getElementById("mySidenav").style.width = "250px";
+    }
+    
+    function closeNav() {
+      document.getElementById("mySidenav").style.width = "0";
+    }
+  
+setInterval(function() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            
+           
+        }
+    };  
+    xhttp.open("GET", "/config", true);   
+    xhttp.send();
+
+    }, 1000);
+
+    setInterval(function() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            
+            var varIndicador = document.getElementById("indicadorPuerta");
+            varIndicador.setAttribute("class", this.responseText);
+        }
+    };  
+    xhttp.open("GET", "/indicadorPuerta", true);   
+    xhttp.send();
+
+    }, 100);
+    setInterval(function() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            
+            var varIndicador = document.getElementById("indicadorEspera");
+            varIndicador.setAttribute("class", this.responseText);
+        }
+    };  
+    xhttp.open("GET", "/indicadorEspera", true);   
+    xhttp.send();
+
+    }, 100);
+    setInterval(function() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            
+            var varIndicador = document.getElementById("indicadorSensor");
+            varIndicador.setAttribute("class", this.responseText);
+        }
+    };  
+    xhttp.open("GET", "/indicadorSensor", true);   
+    xhttp.send();
+
+    }, 100);
+</script>
+</html>

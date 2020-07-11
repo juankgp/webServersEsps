@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>WebControl</title>
+</head>
+<body>
+ 
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="#">Inicio</a>
+        <a href="/config">Configuración</a>
+      
+        
+      </div>
+      
+      <h2>Control</h2>
+      <span style=" color: aliceblue; font-size:30px;cursor:pointer" onclick="openNav()">&#9776; Menú</span>
+    
+      <article>
+        <p  class="" id="indicador"></p>
+    
+          <table class="controles">
+              <tr >
+                  <th>
+                      <h1>Inicio</h1>
+                  </th>
+                  <th>
+                    <h1>Pausa</h1>
+                  </th>    
+                  <th>
+                      <h1>Paro</h1>
+                  </th>
+              </tr>
+              <tr>
+                  <td class="boton">
+                    <a class="play-btn" href="#"></a>
+                  </td>
+                  <td class="boton">
+                    <a class="stop-btn" href="#"></a>
+                  </td>
+                  <td class="boton">
+                    <a class="pause-btn" href="#"></a>
+                  </td>
+              </tr>
+          </table>
+        
+        
+        
+      </article>
+ 
+         
+</body>
+<script>
+     function openNav() {
+      document.getElementById("mySidenav").style.width = "250px";
+    }
+    
+    function closeNav() {
+      document.getElementById("mySidenav").style.width = "0";
+    }
+
+  setInterval(function() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            
+            var varIndicador = document.getElementById("indicador");
+            varIndicador.setAttribute("class", this.responseText);
+        }
+    };  
+    xhttp.open("GET", "/indicador", true);   
+    xhttp.send();
+
+    }, 1000);
+
+  
+</script>
+    
+</html>
