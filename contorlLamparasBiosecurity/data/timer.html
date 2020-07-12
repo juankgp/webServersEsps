@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Temporizador Activado">
+
+    <title>Timer</title>
+</head>
+
+<body id="tiempo">
+
+    <header>
+
+        <p><img src="apmlogolow" alt="LOGO" align="left"></p>
+        <br>
+        <p  style="color:rgb(25, 0, 255); font-size:20px; text-align:center;">Sistema BISOP-01-M3</p> 
+        
+      
+    </header>
+    <article >
+        <table align =  "center" cellspacing="6" cellpadding="2" border="6">
+            <tr>
+                <td>
+                    <h2 align="center">Señalización de Seguridad Industrial</h2>
+                    <h3>Ultima configuracion</h3>
+                    <p style="color:rgb(70, 248, 0); font-size:30px; text-align:CENTER;">%TIMEUC%</p>
+                </td>
+                <td></td>
+                <td>
+                    <h2> Estado Lámparas</h2>
+                    <table align="center">
+                        
+                        <tr>
+                            <td>
+                               L1 %LAMP1% 
+                            </td>   
+                        </tr>
+                        <tr>
+                            <td>L2 %LAMP2%</td>   
+                        </tr>
+                        <tr>
+                            <td>L3 %LAMP3%</td>   
+                        </tr>
+                        <tr>
+                            <td>L4 %LAMP4%</td>   
+                        </tr>
+                    </table>
+                </td>
+                <td>
+                    <h2 align="center">ESTADO DEL ESTERILIZADOR</h2>
+                    <p align="center">%ESTADOEST%</p>
+                    
+                    <p style="color:rgb(240, 0, 0); font-size:40px; text-align:CENTER;">%COUNTDOWN%</p> 
+                </td>
+            </tr>
+        </table>
+
+    </article>
+    <article >
+        
+        
+        <table >
+            <tr>
+                <td style="width:600px;">
+                    <p style="color:rgb(0, 0, 0); font-size:20px; text-align:CENTER;">TEMPORIZADOR PARA EL CICLO DE ESTERILIZACION</p>
+                    <p  style="color:rgb(7, 7, 7); font-size:40px; text-align:left;">%STATET%</p> 
+                </td>
+                
+                <td style="width:100px;">
+                    <p align="right"><a href="/arranque"><img src="play" alt=""></a></p>
+                </td>
+            </tr>
+        </table>
+       
+        
+        <p>
+            <a href="/config"> <img src="botonSetup" alt="" align="right"></a>
+        </p>
+       
+    </article>
+   
+
+</body>
+<script>
+    setInterval(function() {
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("tiempo").innerHTML = this.responseText;
+            }
+        };
+        xhttp.open("GET", "/timer", true);
+        xhttp.send();
+
+    }, 1000);
+</script>
+
+</html>

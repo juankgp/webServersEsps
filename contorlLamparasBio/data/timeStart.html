@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Temporizador Activado">
+
+    <title>Timer</title>
+</head>
+
+<body>
+
+
+    <article id="tiempo" style="color:rgb(25, 0, 255); font-size:90px; text-align:center;">
+        <img src="apmlogolow" alt="" align="center"> <br>
+        <p>%COUNTDOWN%</p>
+        <p style="color:rgb(6, 218, 255); font-size:50px;"> Estado de lamparas </p>
+        <p id="mostrar" style="color:rgb(25, 0, 255); font-size:60px; text-align:center;"> L1 %LAMP1% L2 %LAMP2% L3 %LAMP3% L4 %LAMP4%</p>
+    </article>
+
+
+</body>
+<script>
+    setInterval(function() {
+        var valcount = document.getElementById("tiempo").innerText.trim();
+        var pos = valcount.indexOf("\n");
+        valcount = valcount.substring(0, pos);
+        if (valcount <= 0) {
+            window.location = "/timer";
+        }
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("tiempo").innerHTML = this.responseText.trim();
+            }
+        };
+        xhttp.open("GET", "/timeStart", true);
+        xhttp.send();
+    }, 1000);
+</script>
+
+</html>

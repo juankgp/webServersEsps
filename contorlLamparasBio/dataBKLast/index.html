@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Controlador Lamparas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+    <header>
+        <table align="center">
+            <tr>
+                <td>
+                    <p><img src="apmlogolow" alt="LOGO" align="left"></p>
+                </td>
+                <td>
+                    <h1>Control de Lamparas</h1>
+                </td>
+                <td>
+                    <p><img src="transparencia" width="200" height="150" alt="LOGO" align="left"></p>
+                </td>
+            </tr>
+
+        </table>
+    </header>
+
+    <p>Estado de lampara: <strong> %STATE%</strong></p>
+    <p><a href="/on"><button class="button">ON</button></a>
+        <a href="/off"><button class="button button2">OFF</button></a></p>
+    <table cellspacing="1" cellpadding="2" border="6" align="center">
+        <tr>
+            <th>Hora</th>
+            <!--Columnas-->
+            <th>Minuto</th>
+            <th>Segundo</th>
+        </tr>
+        <!--Fila-->
+        <tr>
+            <td><input type="number" id="hora" value="" oninput="getTime(this)" maxlength="2" size="10" max="59" min="0"></td>
+            <td><input type="number" id="minuto" value="" oninput="getTime(this)" maxlength="2" size="10" max="59" min="0"></td>
+            <td><input type="number" id="segundo" value="" oninput="getTime(this)" maxlength="2" size="10" max="59" min="0"></td>
+        </tr>
+        <!--Fila-->
+
+    </table>
+
+    <p>
+        <a href="/ini?value=20" id="variableTime"><button class="button button3" >Set Tiempo</button></a>
+    </p>
+    <span id="timeMicro">%TIMEUC%</span>
+    <p>
+        TIMER <a href="/timer">Aqui</a>
+    </p>
+</body>
+<script>
+    history.forward()
+
+    function getTime(element) {
+        var horValue = document.getElementById("hora").value;
+        var minValue = document.getElementById("minuto").value;
+        var segValue = document.getElementById("segundo").value;
+        if (horValue >= 59) {
+            document.getElementById("hora").value = 59;
+        }
+        if (minValue >= 59) {
+            document.getElementById("minuto").value = 59;
+        }
+        if (segValue >= 59) {
+            document.getElementById("segundo").value = 59;
+        }
+        var varTime = document.getElementById("variableTime");
+        var totalTime = horValue + ":" + minValue + ":" + segValue
+        varTime.setAttribute("href", "/ini?value=" + totalTime)
+        return false;
+
+    }
+
+    function sendTime(element) {
+        var timeValue = document.getElementById("tiempo").value;
+
+        var xhr = new XMLHttpRequest();
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("timeMicro").innerHTML = this.responseText;
+
+        }
+        xhr.open("GET", "/ini?value=" + timeValue, true);
+        xhr.send();
+
+        xhr.open("GET", "/ini?value=" + timeValue, true);
+        xhr.send();
+
+    }
+
+    function test() {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var sresp = xhr.responseText.trim();
+                var mails = sresp.split("&");
+                var selem = document.getElementById("mails");
+                for (mail in mails) {
+                    var option = document.createElement("option");
+                    var suser = mails[mail];
+                    if ("" == suser)
+                        continue;
+                    option.text = suser;
+                    option.setAttribute("id", suser);
+                    option.setAttribute("onclick", "getFirmaUsuario(this)");
+                    selem.add(option);
+                }
+            }
+        };
+
+        xhr.open('POST', 'cgi-bin/verfirmas.cgi', true);
+        xhr.send("-");
+    }
+</script>
+
+</html>

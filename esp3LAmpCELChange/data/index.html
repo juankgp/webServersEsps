@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=0.5">
+        <meta name="description" content="Temporizador Activado">
+        <title>Timer</title>
+       
+    </head>
+<body >
+
+    <header>
+
+        <p><img src="logo" alt="LOGO" align="left"></p>
+        <br>
+        <p  style="color:rgb(25, 0, 255); font-size:25px; text-align:center;">Sistema BISOP-01-M3</p> 
+        <p align = "right">
+            <a href="/config"> <button >CONFIG</button></a> 
+        </p>
+        <br>
+        <br>
+        
+    </header>
+    <article>
+        <table align="center" cellspacing="6" cellpadding="2" border="6">
+            <tr>
+                <td>
+                    <h2 >Señalización de Seguridad Industrial</h2>
+                    <p id="timeuc" style="color:rgb(4, 20, 160); font-size:30px; text-align:CENTER;">%TIMEUC%</p>
+                    <h3 style="text-align: center;">Última configuración</h3>
+                </td>
+                
+                <td style="width:100px;">
+                    <h2 style="text-align: center;"> Estado Lámparas</h2>
+                    <table align="center">
+                        
+                        <tr>
+                            <td>
+                               <p >L1 <span id="lamp1">%LAMP1%</span></p>  
+                            </td>   
+                        </tr>
+                        <tr>
+                            <td>
+                               <p >L2 <span id="lamp2">%LAMP2%</span></p>   
+                            </td>   
+                        </tr>
+                        <tr>
+                            <td>
+                                <p >L3 <span id="lamp3">%LAMP3%</span></p>  
+                            </td>   
+                        </tr>
+                        <tr>
+                            <td> 
+                                <p >L4 <span id="lamp4">%LAMP4%</span></p>
+                            </td>   
+                        </tr>
+                    </table>
+                </td>
+                <td style="width:300;">
+                    <h2 align="center">ESTADO DEL ESTERILIZADOR</h2>
+                    <p  align="center"> <span id="estadoest">%ESTADOEST%</span> </p>
+                    <!--<p id="ldrs" align="center"> %LDRS%</p>-->
+                    <!-- <p id="outputs" align="center">%OUTPUTS%</p>-->
+                    <p style="color:rgb(255, 106, 6); font-size:40px; text-align:CENTER;">Count Down:  
+                    <span id="countdown" style="color:rgb(255, 106, 6); font-size:40px; text-align:CENTER;">%COUNTDOWN%</span> </p>
+                </td>
+            </tr>
+        </table>
+        <article>
+        
+        
+            <table align = "center" style="width:auto;">
+                <tr>
+                    <td style="width:auto;">
+                        <p >TEMPORIZADOR PARA EL CICLO DE ESTERILIZACIÓN</p>
+                        <p id="tiempo1" style="color: rgb(47, 0, 255); font-size: 60px; text-align: center;">%STATET%</p> 
+                    </td>
+                 
+                </tr>
+            </table>
+            <table align = "center" cellspacing="6" cellpadding="2" border="10">
+                <tr>
+                    <th>PLAY</th>
+                    <th>PAUSA</th>
+                    <th>CONTINUAR</th>
+                    <th>PARO</th>
+                </tr>
+                <tr>
+                    <td align =  "center" style="width:200px;">
+                        <a href="/arranque"><button style="background-color: #4CAF50;color: white;
+                            padding: 5px;
+                            text-align: center;
+                            text-decoration: none;
+                            display: inline-block;
+                            font-size: 16px;
+                            margin: 4px 2px;
+                            
+                            ">PLAY</button></a>
+                        
+                    </td>
+                        
+                    <td align =  "center" style="width:200px;">
+                        <a href="/pausa"><button style="background-color: #4CAF50;color: white;
+                        padding: 5px;
+                            text-align: center;
+                            text-decoration: none;
+                            display: inline-block;
+                            font-size: 16px;
+                            margin: 4px 2px;
+                        ">PAUSA</button></a>
+                    </td>
+                    
+                    <td align =  "center" style="width:200px;">
+                        <a href="/resume"><button style="background-color: #4CAF50;color: white;
+                            padding: 5px;
+                            text-align: center;
+                            text-decoration: none;
+                            display: inline-block;
+                            font-size: 16px;
+                            margin: 4px 2px;
+                            
+                            ">RESUME</button></a>
+                    </td>
+                    <td align =  "center" style="width:200px;">
+                        <a href="/stop"><button style="background-color: #fc320e;color: white;
+                            padding: 5px;
+                            text-align: center;
+                            text-decoration: none;
+                            display: inline-block;
+                            font-size: 16px;
+                            margin: 4px 2px;
+                            
+                            ">PARO</button></a>
+                    </td>
+            </tr>
+            </table>
+            
+           
+        </article>
+    </article>
+
+  
+   
+</body>
+<script>
+setInterval(function() {
+
+var xhttp = new XMLHttpRequest();
+xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        document.getElementById("timeuc").innerHTML = this.responseText;
+        
+    }
+};  
+xhttp.open("GET", "/timeuc", true);   
+xhttp.send();
+
+}, 1000);
+
+
+setInterval(function() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("tiempo1").innerHTML = this.responseText;
+            
+        }
+    };  
+    xhttp.open("GET", "/tiempo1", true);   
+    xhttp.send();
+}, 1000);
+
+setInterval(function() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("estadoest").innerHTML = this.responseText; 
+        }
+    };  
+    xhttp.open("GET", "/estadoest", true);   
+    xhttp.send();
+}, 1000);
+setInterval(function() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("countdown").innerHTML = this.responseText; 
+        }
+    };  
+    xhttp.open("GET", "/countdown", true);   
+    xhttp.send();
+}, 1000);
+setInterval(function() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("lamp1").innerHTML = this.responseText; 
+        }
+    };  
+    xhttp.open("GET", "/lamp1", true);   
+    xhttp.send();
+}, 1000);
+setInterval(function() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("lamp2").innerHTML = this.responseText; 
+        }
+    };  
+    xhttp.open("GET", "/lamp2", true);   
+    xhttp.send();
+}, 1000);
+setInterval(function() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("lamp3").innerHTML = this.responseText; 
+        }
+    };  
+    xhttp.open("GET", "/lamp3", true);   
+    xhttp.send();
+}, 1000);
+setInterval(function() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("lamp4").innerHTML = this.responseText; 
+        }
+    };  
+    xhttp.open("GET", "/lamp4", true);   
+    xhttp.send();
+}, 1000);
+
+</script>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="data:,">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <title>Configuración de Tiempo</title>
+</head>
+
+<body>
+    <header>
+        <header>
+
+            <p><img src="logo" alt="LOGO" align="left"></p>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <h1>Configuración de Tiempo</h1>
+
+        </header>
+    </header>
+    <nav>
+        <ul>
+            <li>
+                <a href="/index"><button>REGRESAR</button> </a>
+            </li>
+            <br>
+            <br>
+
+
+        </ul>
+    </nav>
+    
+    <table cellspacing="1" cellpadding="2" border="6" align="center">
+        <tr>
+            <th>Hora</th>
+            <!--Columnas-->
+            <th>Minuto</th>
+            <th>Segundo</th>
+            <th>tEspera (s)</th>
+        </tr>
+        <!--Fila-->
+        <tr>
+            <td><input type="number" id="hora" value="" oninput="getTime(this)" maxlength="2" size="10" max="59" min="0"></td>
+            <td><input type="number" id="minuto" value="" oninput="getTime(this)" maxlength="2" size="10" max="59" min="0"></td>
+            <td><input type="number" id="segundo" value="" oninput="getTime(this)" maxlength="2" size="10" max="59" min="0"></td>
+            <td><input type="number" id="tespera" value="" oninput="getTime(this)" maxlength="2" size="10" max="59" min="0"></td>
+        </tr>
+        
+        <!--Fila-->
+
+    </table>
+    <table align="center">
+        <tr>
+            <td>
+                <p >
+                    <a href="/ini?value=20" id="variableTime"><button class="button button3" >Grabar Tiempo</button></a>
+                  
+                </p>
+                <p id="timeMicro" >%TIMEUC%</p>
+            </td>
+            
+        
+        </tr>
+    </table>
+
+    <h1 class="titulo">Configuración de Red WiFi</h1>
+    <div class="container">
+        <div class="center">
+            <table  align="center">
+                <tr>
+                    <th>Nombre de la Red</th>
+                    <th>Contraseña</th>
+                </tr>
+                <tr>
+                    <td> <input type="text" id="ssid" value=""  ></td>
+                    <td> <input type="password" id="pass" value="" ></td>
+                </tr>
+            </table>
+           
+           
+        </div>
+    </div>
+    <table align="center">
+        <tr>
+            <td>
+                <p >
+                    <a href="" id="sendWifiData"><button class="myButton" onclick="getDataWifi(this)" >Conectar</button></a>
+                  
+                </p>
+            </td>
+        </tr>
+    </table>
+    
+    
+</body>
+<script>
+    history.forward()
+function getDataWifi(element) {
+        var ssid = document.getElementById("ssid").value;
+        var pass = document.getElementById("pass").value;
+      
+        var varTime = document.getElementById("sendWifiData");
+        var datawifi = ssid + ":" + pass + ":";
+        varTime.setAttribute("href", "/wifidata?value=" + datawifi)
+        window.location = "/config";
+        return false;
+
+    }
+    function getTime(element) {
+        var horValue = document.getElementById("hora").value;
+        var minValue = document.getElementById("minuto").value;
+        var segValue = document.getElementById("segundo").value;
+        var tesperaValue = document.getElementById("tespera").value;
+        if (horValue >= 59) {
+            document.getElementById("hora").value = 59;
+        }
+        if (minValue >= 59) {
+            document.getElementById("minuto").value = 59;
+        }
+        if (segValue >= 59) {
+            document.getElementById("segundo").value = 59;
+        }
+        if (tesperaValue >= 59) {
+            document.getElementById("tespera").value = 59;
+        }
+        var varTime = document.getElementById("variableTime");
+        var totalTime = horValue + ":" + minValue + ":" + segValue + ":" +tesperaValue;
+        varTime.setAttribute("href", "/ini?value=" + totalTime)
+        return false;
+
+    }
+
+    
+</script>
+
+</html>

@@ -39,6 +39,7 @@ void setup() {
   
  
   EEPROM.begin(512);
+  
   char host[16];
   Serial.println("Iniciando");
 

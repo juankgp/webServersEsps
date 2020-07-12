@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Controlador Lamparas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+    <h1>Control de Lamparas</h1>
+    <p>Estado de lampara: <strong> %STATE%</strong></p>
+    <p><a href="/on"><button class="button">ON</button></a></p>
+    <p><a href="/off"><button class="button button2">OFF</button></a></p>
+    <p><input type="text" id="tiempo" value="" oninput="getTime(this)"></p>
+    <p>
+        <a href="/ini?value=20" id="variableTime"><button class="button button3" >Inicio</button></a>
+    </p>
+    <span id="timeMicro">%TIMEUC%</span>
+
+</body>
+<script>
+    function getTime(element) {
+        var timeValue = document.getElementById("tiempo").value;
+        var varTime = document.getElementById("variableTime");
+
+        varTime.setAttribute("href", "/ini?value=" + timeValue)
+        return false;
+
+    }
+
+    function sendTime(element) {
+        var timeValue = document.getElementById("tiempo").value;
+
+        var xhr = new XMLHttpRequest();
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("timeMicro").innerHTML = this.responseText;
+
+        }
+        xhr.open("GET", "/ini?value=" + timeValue, true);
+        xhr.send();
+
+        xhr.open("GET", "/ini?value=" + timeValue, true);
+        xhr.send();
+
+    }
+
+    function test() {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var sresp = xhr.responseText.trim();
+                var mails = sresp.split("&");
+                var selem = document.getElementById("mails");
+                for (mail in mails) {
+                    var option = document.createElement("option");
+                    var suser = mails[mail];
+                    if ("" == suser)
+                        continue;
+                    option.text = suser;
+                    option.setAttribute("id", suser);
+                    option.setAttribute("onclick", "getFirmaUsuario(this)");
+                    selem.add(option);
+                }
+            }
+        };
+
+        xhr.open('POST', 'cgi-bin/verfirmas.cgi', true);
+        xhr.send("-");
+    }
+</script>
+
+</html>

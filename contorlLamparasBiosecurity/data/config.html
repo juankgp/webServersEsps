@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="data:,">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <title>Configuración de Timepo</title>
+</head>
+
+<body>
+    <header>
+        <header>
+
+            <p><img src="apmlogolow" alt="LOGO" align="left"></p>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <h1 align="center">Configuración de Tiempo</h1>
+
+        </header>
+    </header>
+    <nav>
+        <ul>
+            <li>
+                <a href="/timer"> <img src="botonTimer" alt="" align="left"></a>
+            </li>
+            <br>
+            <br>
+
+
+        </ul>
+    </nav>
+    <p>Test de Lamparas:<strong> %STATE%</strong></p>
+    <p><a href="/on"><button class="button">ON</button></a>
+        <a href="/off"><button class="button button2">OFF</button></a></p>
+    <table cellspacing="1" cellpadding="2" border="6" align="center">
+        <tr>
+            <th>Hora</th>
+            <!--Columnas-->
+            <th>Minuto</th>
+            <th>Segundo</th>
+            <th>tEspera (s)</th>
+        </tr>
+        <!--Fila-->
+        <tr>
+            <td><input type="number" id="hora" value="" oninput="getTime(this)" maxlength="2" size="10" max="59" min="0"></td>
+            <td><input type="number" id="minuto" value="" oninput="getTime(this)" maxlength="2" size="10" max="59" min="0"></td>
+            <td><input type="number" id="segundo" value="" oninput="getTime(this)" maxlength="2" size="10" max="59" min="0"></td>
+            <td><input type="number" id="tespera" value="" oninput="getTime(this)" maxlength="2" size="10" max="59" min="0"></td>
+        </tr>
+        <!--Fila-->
+
+    </table>
+
+    <p>
+        <a href="/ini?value=20" id="variableTime"><button class="button button3" >Grabar Tiempo</button></a>
+    </p>
+    <p id="timeMicro">%TIMEUC%</p>
+
+</body>
+<script>
+    history.forward()
+
+    function getTime(element) {
+        var horValue = document.getElementById("hora").value;
+        var minValue = document.getElementById("minuto").value;
+        var segValue = document.getElementById("segundo").value;
+        var tesperaValue = document.getElementById("tespera").value;
+        if (horValue >= 59) {
+            document.getElementById("hora").value = 59;
+        }
+        if (minValue >= 59) {
+            document.getElementById("minuto").value = 59;
+        }
+        if (segValue >= 59) {
+            document.getElementById("segundo").value = 59;
+        }
+        if (tesperaValue >= 59) {
+            document.getElementById("tespera").value = 59;
+        }
+        var varTime = document.getElementById("variableTime");
+        var totalTime = horValue + ":" + minValue + ":" + segValue + ":" +tesperaValue;
+        varTime.setAttribute("href", "/ini?value=" + totalTime)
+        return false;
+
+    }
+
+    
+</script>
+
+</html>

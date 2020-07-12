@@ -115,6 +115,7 @@ readtxt();
 
 void loop(){
 
+  delay(1);
   Alarm.delay(1000);
   
   Serial.println(String(hour()) + ":" + String(minute()) + ":" +String(second()));
