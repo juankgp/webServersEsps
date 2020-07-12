@@ -227,6 +227,42 @@ server.on("/tiempodata", HTTP_GET, [](AsyncWebServerRequest *request){
    request->send(SPIFFS, "/config.html", String(), false, processor);
   });
 
+  server.on("/dataHorario", HTTP_GET, [](AsyncWebServerRequest *request){
+    //Serial.println("En ini");
+    String inputMessage;
+    // GET input1 value on <ESP_IP>/slider?value=<inputMessage>
+    if (request->hasParam(PARAM_INPUT_2)) {
+     // delay(1000);
+     // Serial.println("Llego value");
+      inputMessage = request->getParam(PARAM_INPUT_2)->value();
+      
+      String tdata = String(inputMessage);
+      Serial.println("Horario: " + tdata);
+      int sepHoraIni= tdata.indexOf(":");
+      int sepMinIni = tdata.indexOf(":",sepHoraIni+1);
+      int sepHoraFin= tdata.indexOf(":",sepMinIni+1);
+      int sepMinFin = tdata.indexOf(":",sepHoraFin+1);
+      String sHoraIni = tdata.substring(0,sepHoraIni);
+      String sMinIni = tdata.substring(sepHoraIni+1,sepMinIni);
+      String sHoraFin = tdata.substring(sepMinIni+1,sepHoraFin);
+      String sMinFin = tdata.substring(sepHoraFin+1,sepMinFin);
+      Serial.println("Datos de Horario: " + sHoraIni + "----" + sMinIni +"------"+ sHoraFin + "----" + sMinFin);
+    
+     //writetxt(wifiData);
+      /*EEPROM.write(addr,ston.toInt());
+      EEPROM.write(addr+1, stoff.toInt());
+      EEPROM.commit();
+      ton = ston.toInt();
+      toff =stoff.toInt();*/
+    }
+    else {
+      inputMessage = "No message sent";
+    }
+   
+  
+   request->send(SPIFFS, "/config.html", String(), false, processor);
+  });
+
 server.on("/ini", HTTP_GET, [](AsyncWebServerRequest *request){//sincronizoReloj
     //Serial.println("En ini");
     String inputMessage;

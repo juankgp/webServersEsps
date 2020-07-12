@@ -30,56 +30,82 @@
         </div>
     </div>
 
-    <h1 class="tituloleft">Configuración de Red WiFi</h1>
-    <table>
-        <tr>
-            <div class="container">
-                <div class="left">
-                    <table>
-                        <tr>
-                            <th>Nombre de la Red</th>
-                            <th>Contraseña</th>
-                        </tr>
-                        <tr>
-                            <td> <input type="text" id="ssid" value=""></td>
-                            <td> <input type="password" id="pass" value=""></td>
-                        </tr>
-                    </table>
+    <h1 class="titulo">Configuración de Red WiFi</h1>
+    <div class="container">
+        <div class="center">
+            <table>
+                <tr>
+                    <th>Nombre de la Red</th>
+                    <th>Contraseña</th>
+                </tr>
+                <tr>
+                    <td> <input type="text" id="ssid" value=""></td>
+                    <td> <input type="password" id="pass" value=""></td>
+                </tr>
+            </table>
 
 
-                </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="center">
+            <a href="" id="sendWifiData"><button class="myButton" onclick="getData(this)" >Conectar</button></a>
+        </div>
+    </div>
+
+    <h1 class="titulo">Set Tiempo de Trabajo</h1>
+    <div class="container">
+        <div class="center">
+            <table>
+                <tr>
+                    <th>Tiempo ON en Minutos</th>
+                    <th>Tiempo OFF en Minutos</th>
+
+                </tr>
+                <tr>
+                    <td> <input type="number" id="tiempoTrabON" value=""></td>
+                    <td> <input type="number" id="tiempoTrabOFF" value=""></td>
+                </tr>
+            </table>
+
+
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="center">
+            <a href="" id="sendTime"><button class="myButton" onclick="getTiempo(this)" >Set Time</button></a>
+        </div>
+    </div>
+
+    <!--xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-->
+    <h1 class="titulo">Set Horario</h1>
+    <div class="container">
+        <div class="center">
+            <table>
+                <tr>
+                    <th>Hora Inicio</th>
+                    <th>Hora Fin</th>
+                </tr>
+                <tr>
+                    <td> <input type="time" id="tHorarioini" value=""></td>
+                    <td> <input type="time" id="tHorariofin" oninput="evalHorario(this)" value=""></td>
+
+                </tr>
+            </table>
+            <div class="popup">
+                <span class="popuptext" id="myPopup">No Se recomienda un uso mayor a 12 horas!</span>
             </div>
-            <div class="container">
-                <div class="left">
-                    <a href="" id="sendWifiData"><button class="myButton" onclick="getData(this)" >Conectar</button></a>
-                </div>
-            </div>
-            <h1 class="titulo">Set Tiempo de Trabajo</h1>
-            <div class="container">
-                <div class="center">
-                    <table>
-                        <tr>
-                            <th>Tiempo ON en Minutos</th>
-                            <th>Tiempo OFF en Minutos</th>
+        </div>
+    </div>
 
-                        </tr>
-                        <tr>
-                            <td> <input type="number" id="tiempoTrabON" value=""></td>
-                            <td> <input type="number" id="tiempoTrabOFF" value=""></td>
-                        </tr>
-                    </table>
+    <div class="container">
+        <div class="center">
+            <a href="" id="sendHorario"><button class="myButton" onclick="getHorario(this)" >Set Horario</button></a>
+        </div>
+    </div>
 
-
-                </div>
-            </div>
-
-            <div class="container">
-                <div class="center">
-                    <a href="" id="sendTime"><button class="myButton" onclick="getTiempo(this)" >Set Time</button></a>
-                </div>
-            </div>
-        </tr>
-    </table>
+    <!--xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-->
     <h1 class="titulo">Test Ozono</h1>
     <div class="container">
         <div class="center">
@@ -88,13 +114,38 @@
         </div>
     </div>
 
-
-
-
-
-
 </body>
 <script>
+    function myFunction() {
+        var popup = document.getElementById("myPopup");
+        popup.classList.toggle("show");
+
+    }
+
+    function evalHorario(element) {
+        var tHorarioini = document.getElementById("tHorarioini").value;
+        var tHorariofin = document.getElementById("tHorariofin").value;
+        if (tHorarioini > tHorariofin) {
+            alert("No se recomineda un horario de trabajo mayor a 12 horas")
+            document.getElementById("sendHorario").style.visibility = 'hidden';
+        } else {
+            document.getElementById("sendHorario").style.visibility = 'visible';
+        }
+
+
+    }
+
+    function getHorario(element) {
+        var tHorarioini = document.getElementById("tHorarioini").value;
+        var tHorariofin = document.getElementById("tHorariofin").value;
+
+        var varTime = document.getElementById("sendHorario");
+        var dataHorario = tHorarioini + ":" + tHorariofin + ":";
+        varTime.setAttribute("href", "/dataHorario?value=" + dataHorario)
+        window.location = "/config";
+        return false;
+    }
+
     function getTime(element) {
         var d = new Date();
         var hora = d.getHours();
@@ -123,6 +174,7 @@
         return false;
 
     }
+
 
     function getTiempo(element) {
         var ttrabon = document.getElementById("tiempoTrabON").value;
@@ -177,18 +229,6 @@
         }
         return i;
     }
-    setInterval(function() {
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-
-
-            }
-        };
-        xhttp.open("GET", "/config", true);
-        xhttp.send();
-
-    }, 1000);
 </script>
 
 </html>

@@ -17,7 +17,14 @@
 		},
 		{
 			"path": "esp3LAmpCELChange"
+		},
+		{
+			"path": "contorlLamparasBiosecurity"
 		}
 	],
-    "settings": {}
+	"settings": {
+		"files.associations": {
+			"functional": "cpp"
+		}
+	}
 }
