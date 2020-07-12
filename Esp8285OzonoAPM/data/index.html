@@ -24,26 +24,18 @@
 
         <table class="estados">
             <tr>
-                <th>
-                    <h1>Est. Humo</h1>
-                </th>
+
                 <th>
                     <h1>Est. Ozono</h1>
                 </th>
-                <th>
-                    <h1>Est. Ventiladores</h1>
-                </th>
+
             </tr>
             <tr>
-                <td class="luces">
-                    <p class="" id="indicadorHU"></p>
-                </td>
+
                 <td class="luces">
                     <p class="" id="indicadorOZ"></p>
                 </td>
-                <td class="luces">
-                    <p class="" id="indicadorVT"></p>
-                </td>
+
             </tr>
         </table>
         <table class="controles">
@@ -51,27 +43,37 @@
                 <th>
                     <h1>Inicio</h1>
                 </th>
-                <th>
-                    <h1>Pausa</h1>
-                </th>
+
                 <th>
                     <h1>Paro</h1>
+                </th>
+                <th>
+                    <h1>Horario</h1>
                 </th>
             </tr>
             <tr>
                 <td class="boton">
                     <a class="play-btn" href="/arranque"></a>
                 </td>
-                <td class="boton">
-                    <a class="pause-btn" href="#"></a>
-                </td>
+
                 <td class="boton">
 
                     <a class="stop-btn" href="/stop"></a>
                 </td>
+                <td class="boton">
+                    <a href="/activeHorario?value=prube" id="iniHorario">
+                        <input class="checHorario" type="checkbox" id="tHorario" value="">
+
+                    </a>
+                    <label for="">Activar/Desactivar horario</label>
+                    <div class="container">
+                        <div class="center">
+                            <a href="" id="sendHorario"><button class="myButton" onclick="getHorario(this)" >Enviar</button></a>
+                        </div>
+                    </div>
+                </td>
             </tr>
         </table>
-
 
 
     </article>
@@ -79,6 +81,59 @@
 
 </body>
 <script>
+    function getHorario(element) {
+        var checkBox = document.getElementById("tHorario");
+        var varTime = document.getElementById("sendHorario");
+        if (checkBox.checked == true) {
+            varTime.setAttribute("href", "/activeHorario?value=activado");
+            window.location = "/index";
+
+
+        } else {
+            varTime.setAttribute("href", "/activeHorario?value=desactivado");
+            window.location = "/index";
+
+        }
+
+        window.location = "/index";
+        return false;
+    }
+    setInterval(function() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+
+                var varIndicador = document.getElementById("tHorario");
+                if (this.responseText == "true")
+                    varIndicador.checked = true;
+                else
+                    varIndicador.checked = false;
+            }
+        };
+        xhttp.open("GET", "/verifHorario", true);
+        xhttp.send();
+
+    }, 3000);
+
+    function evalHorario(element) {
+        var checkBox = document.getElementById("tHorario");
+        var iniHorario = document.getElementById("iniHorario");
+
+
+        if (checkBox.checked == true) {
+            iniHorario.setAttribute("href", "/activeHorario?value=activado");
+            window.location = "/index";
+            return false;
+
+        } else {
+            iniHorario.setAttribute("href", "/activeHorario?value=desactivado");
+            window.location = "/index";
+            return false;
+
+        }
+
+    }
+
     function openNav() {
         document.getElementById("mySidenav").style.width = "250px";
     }
@@ -87,19 +142,7 @@
         document.getElementById("mySidenav").style.width = "0";
     }
 
-    setInterval(function() {
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
 
-                var varIndicador = document.getElementById("indicadorHU");
-                varIndicador.setAttribute("class", this.responseText);
-            }
-        };
-        xhttp.open("GET", "/indicadorHU", true);
-        xhttp.send();
-
-    }, 1000);
     setInterval(function() {
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
@@ -113,19 +156,6 @@
         xhttp.send();
 
     }, 100);
-    setInterval(function() {
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-
-                var varIndicador = document.getElementById("indicadorVT");
-                varIndicador.setAttribute("class", this.responseText);
-            }
-        };
-        xhttp.open("GET", "/indicadorVT", true);
-        xhttp.send();
-
-    }, 1000);
 </script>
 
 </html>

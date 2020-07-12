@@ -9,11 +9,6 @@
 #include "ota.h"
 
 
-int totalHor = 0;
-int totalMin = 0;
-int totalSeg = 0;
-int totaltEspera = 0;
-
 
 
 void setup() {
@@ -27,10 +22,21 @@ void setup() {
   EEPROM.begin(512);
   ton = EEPROM.read(addr);
   toff = EEPROM.read(addr+1);
+  tHoraIni = EEPROM.read(addr+2);
+  tMinIni = EEPROM.read(addr+3);
+  tHoraFin = EEPROM.read(addr+4);
+  tMinFin = EEPROM.read(addr+5);
   
-  char host[16];
-  Serial.println("Iniciando: " + String(ton) + "-------"+ String(toff));
-  Serial.println("Tiempos guardados");
+  char host[2];
+  /*Serial.println("Iniciando: " + String(ton) + "-------"+ 
+  String(toff) + "Horario" + String(tHoraIni) + "-------"+ 
+  String(tMinIni) + "-------"+ String(tHoraFin) + "-------"+
+  String(tMinFin));*/
+  Serial << "Iniciando" << ton << "---" << toff <<
+  "Horario: " << tHoraIni << "----" << tMinIni <<
+  "---" << tHoraFin << "---" << tMinFin << endl;
+  //Serial.println("Tiempos guardados");
+  Serial << "Tiempos Guardados" <<endl;
   Wire.begin(9, 10);
 
   //AsyncWiFiManager wifiManager(&server,&dns);
@@ -51,7 +57,7 @@ readtxt();
 
 
  #ifdef ESP8266
-  snprintf(host, 12, "ESP%08X", ESP.getChipId());
+  snprintf(host, 12, "ESP%08X", "1");
   #else
   snprintf(host, 16, "ESP%012llX", ESP.getEfuseMac());
   #endif
@@ -59,7 +65,7 @@ readtxt();
 
 
    if(!wifiConnect(host,readtxt(),ssidtext,passtext)) {
-     Serial.println("Connection failed");
+     Serial <<"Connection failed" << endl;
      //digitalWrite(redLed,LOW);
      return;
    }
@@ -101,7 +107,7 @@ void loop(){
 
   Alarm.delay(1000);
   
-  Serial.println(String(hour()) + ":" + String(minute()) + ":" +String(second()));
+  Serial << hour() << ":" << minute() << ":" << second() << endl;
 
 }
 

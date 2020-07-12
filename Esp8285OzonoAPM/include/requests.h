@@ -6,30 +6,31 @@ const char* PARAM_INPUT_2 = "value";
 DS3232RTC RTC;
 String timeValue = "10";
 boolean work = false;
-AlarmId alarmWork, alarmEspera;
+AlarmId alarmWork, alarmEspera,alarmHorarioOn,alarmHorarioOff;
 AsyncWebServer server(80);
 File myFile;
 
 const char* myFilePath = "/wifi.txt";
 int minActual = 0;
 
-int timeInit = 2;
-int timeOzono = 1;
-int timeEspera = 1;
-int timeVent = 5;
+boolean estadoHorario = false;
 int multipliSeg = 1;
 int timeTrabajo = 20;
 int addr = 0;
 int ton = 0;
 int toff = 0;
+int tHoraIni = 0;
+int tMinIni = 0;
+int tHoraFin = 0;
+int tMinFin = 0;
 
 void writetxt(String datos){
    myFile = SPIFFS.open(myFilePath, "w");
   if (myFile.print(datos)){
-    Serial.println("Message successfully written");  
+    Serial << "Message successfully written" << endl;  
   }
   else{
-    Serial.print("Writting message failled!!");
+    Serial << "Writting message failled!!" << endl;
   }
   myFile.close();
 }
@@ -60,12 +61,20 @@ void writetxt(String datos){
 }
 void AlarmFunctionOFF();
 void AlarmFunctionON();
+void AlarmHorarioOFF();
+void AlarmHorarioON();
 
+void AlarmHorarioON(){
+  digitalWrite(ozono,HIGH);
+}
+void AlarmHorarioOFF(){
+  digitalWrite(ozono,LOW);
+}
 void AlarmFunctionON(){
   if (work)
   {
     digitalWrite(ozono,HIGH);
-    Serial.println("PrendoOzono");
+    Serial << "PrendoOzono" << endl;
   
     //Alarm.timerRepeat(timeHumo*60, AlarmFunctionOFF);
     alarmWork=Alarm.timerOnce(ton*multipliSeg, AlarmFunctionOFF);  
@@ -76,15 +85,12 @@ void AlarmFunctionON(){
 void AlarmFunctionOFF(){
   if(work){
    digitalWrite(ozono,LOW);
-    Serial.println("ApagoOzono");
+    Serial << "ApagoOzono" << endl;
     alarmEspera = Alarm.timerOnce(toff*multipliSeg, AlarmFunctionON);
   }
   
 }
-void AlarmApagoVent(){
- 
-   Serial.println("ApagoVentiladores");
-}
+
 void AlarmDisableWork(){
   work = false;
  // digitalWrite(humo,LOW);
@@ -111,14 +117,14 @@ void AlarmDisableWork(){
     request->send(SPIFFS, "/stylecfg.css", "text/css");
   });
   server.on("/onozono", HTTP_GET, [](AsyncWebServerRequest *request){
-    Serial.println("Prende ozono y vents");
+    Serial << "Prende ozono" << endl;
     digitalWrite(ozono,HIGH);
     
    
     request->send(SPIFFS, "/config.html", String(), false, processor);
   });
   server.on("/offozono", HTTP_GET, [](AsyncWebServerRequest *request){
-    Serial.println("apaga ozono y vents");
+    Serial <<"apaga ozono" << endl;
     digitalWrite(ozono,LOW);
     
     request->send(SPIFFS, "/config.html", String(), false, processor);
@@ -130,7 +136,7 @@ server.on("/arranque", HTTP_GET, [](AsyncWebServerRequest *request){
     work=true;
     //Alarm.timerOnce(toff*multipliSeg, AlarmFunctionOFF);
     alarmEspera = Alarm.timerOnce(1, AlarmFunctionON);
-    Serial.println("Alarmas creadas");
+    Serial << "Alarmas creadas" << endl;
     request->send(SPIFFS, "/index.html", String(), false, processor);
   });
   server.on("/stop", HTTP_GET, [](AsyncWebServerRequest *request){
@@ -139,16 +145,19 @@ server.on("/arranque", HTTP_GET, [](AsyncWebServerRequest *request){
     Alarm.disable(alarmEspera);
     //Alarm.timerOnce(toff*multipliSeg, AlarmFunctionOFF);
     digitalWrite(ozono,LOW);
-    Serial.println("Paro");
+    Serial << "Paro" << endl;
     request->send(SPIFFS, "/index.html", String(), false, processor);
   });
 
 
-
-
-
-
-
+ server.on("/verifHorario", HTTP_GET, [](AsyncWebServerRequest *request){ 
+    String cadena;
+    if(estadoHorario)
+      cadena = "true";
+    else
+      cadena = "false";
+  request->send_P(200,"text/plain",cadena.c_str());
+  });
 
 
 
@@ -181,7 +190,7 @@ server.on("/wifidata", HTTP_GET, [](AsyncWebServerRequest *request){
     String ssidtext = wifiData.substring(0,sepssid);
     String passtext = wifiData.substring(sepssid+1,seppass);
      Serial.println("Datos Wifi" + ssidtext + "----" + passtext);*/
-     Serial.println("Datos Wifi: " + wifiData);
+     Serial << "Datos Wifi: " << wifiData << endl;
     
      writetxt(wifiData);
      ESP.restart();
@@ -210,7 +219,7 @@ server.on("/tiempodata", HTTP_GET, [](AsyncWebServerRequest *request){
     int septoff = tdata.indexOf(":",septon+1);
     String ston = tdata.substring(0,septon);
     String stoff = tdata.substring(septon+1,septoff);
-     Serial.println("Datos de tiempo" + ston + "----" + stoff);
+     Serial <<"Datos de tiempo" << ston + "----"<< stoff << endl;
     
      //writetxt(wifiData);
       EEPROM.write(addr,ston.toInt());
@@ -237,7 +246,7 @@ server.on("/tiempodata", HTTP_GET, [](AsyncWebServerRequest *request){
       inputMessage = request->getParam(PARAM_INPUT_2)->value();
       
       String tdata = String(inputMessage);
-      Serial.println("Horario: " + tdata);
+      //Serial << "Horario: " <<  tdata << endl;
       int sepHoraIni= tdata.indexOf(":");
       int sepMinIni = tdata.indexOf(":",sepHoraIni+1);
       int sepHoraFin= tdata.indexOf(":",sepMinIni+1);
@@ -246,14 +255,19 @@ server.on("/tiempodata", HTTP_GET, [](AsyncWebServerRequest *request){
       String sMinIni = tdata.substring(sepHoraIni+1,sepMinIni);
       String sHoraFin = tdata.substring(sepMinIni+1,sepHoraFin);
       String sMinFin = tdata.substring(sepHoraFin+1,sepMinFin);
-      Serial.println("Datos de Horario: " + sHoraIni + "----" + sMinIni +"------"+ sHoraFin + "----" + sMinFin);
+      Serial << "Datos de Horario: "  << sHoraIni << "----" << sMinIni << "------" 
+      << sHoraFin << "----" << sMinFin;
     
      //writetxt(wifiData);
-      /*EEPROM.write(addr,ston.toInt());
-      EEPROM.write(addr+1, stoff.toInt());
+      EEPROM.write(addr +2,sHoraIni.toInt());
+      EEPROM.write(addr+3, sMinIni.toInt());
+      EEPROM.write(addr +4,sHoraFin.toInt());
+      EEPROM.write(addr+5, sMinFin.toInt());
       EEPROM.commit();
-      ton = ston.toInt();
-      toff =stoff.toInt();*/
+      tHoraIni = sHoraIni.toInt();
+      tMinIni = sMinIni.toInt();
+      tHoraFin = sHoraFin.toInt();
+      tMinFin = sMinFin.toInt();
     }
     else {
       inputMessage = "No message sent";
@@ -289,7 +303,8 @@ server.on("/ini", HTTP_GET, [](AsyncWebServerRequest *request){//sincronizoReloj
       String segundo = timeValue.substring(sepMin+1,sepSeg);
       
       
-      Serial.println(hora + "-" + minuto + "-" + segundo + "-" + dia + "-" +  (mes.toInt()+1) + "-" + anio);
+      Serial << hora<< "-" << minuto << "-" << segundo << 
+      "-" << dia << "-" <<  (mes.toInt()+1) << "-" << anio << endl;
 
       tmElements_t tm;
         tm.Hour = hora.toInt();               // set the RTC to an arbitrary time
@@ -311,5 +326,38 @@ server.on("/ini", HTTP_GET, [](AsyncWebServerRequest *request){//sincronizoReloj
 
    request->send(SPIFFS, "/config.html", String(), false, processor);
   });
+ server.on("/activeHorario", HTTP_GET, [](AsyncWebServerRequest *request){
+    //Serial.println("En ini");
+    String inputMessage;
+    // GET input1 value on <ESP_IP>/slider?value=<inputMessage>
+    if (request->hasParam(PARAM_INPUT_2)) {
+     // delay(1000);
+     // Serial.println("Llego value");
+      inputMessage = request->getParam(PARAM_INPUT_2)->value();
+      
+      String tdata = String(inputMessage);
+     Serial << "ACTIVAR: "<< tdata << endl;
+     if(tdata == "activado"){
+       estadoHorario = true;
+      alarmHorarioOn =  Alarm.alarmRepeat(tHoraIni,tMinIni,0, AlarmHorarioON);  
+      alarmHorarioOff =  Alarm.alarmRepeat(tHoraFin,tMinFin,0, AlarmHorarioOFF);  
+     }
+     else
+     {
+       estadoHorario = false;
+       Alarm.disable(alarmHorarioOn);
+       Alarm.disable(alarmHorarioOff);
+     }
+
+    }
+    else {
+      inputMessage = "No message sent";
+    }
+   
+  
+   request->send(SPIFFS, "/index.html", String(), false, processor);
+  });
+
+
  }
  
