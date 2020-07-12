@@ -5,7 +5,7 @@ const char* PARAM_INPUT_1 = "state";
 const char* PARAM_INPUT_2 = "value";
 DS3232RTC RTC;
 String timeValue = "10";
-boolean work = true;
+boolean work = false;
 AlarmId alarmWork, alarmEspera;
 AsyncWebServer server(80);
 File myFile;
@@ -14,12 +14,14 @@ const char* myFilePath = "/wifi.txt";
 int minActual = 0;
 
 int timeInit = 2;
-int timeHumo = 1;
+int timeOzono = 1;
 int timeEspera = 1;
 int timeVent = 5;
-int multipliSeg = 60;
+int multipliSeg = 1;
 int timeTrabajo = 20;
 int addr = 0;
+int ton = 0;
+int toff = 0;
 
 void writetxt(String datos){
    myFile = SPIFFS.open(myFilePath, "w");
@@ -62,21 +64,20 @@ void AlarmFunctionON();
 void AlarmFunctionON(){
   if (work)
   {
-    //digitalWrite(humo,HIGH);
-    minActual = minute();
-    Serial.println("PrendoHumo");
+    digitalWrite(ozono,HIGH);
+    Serial.println("PrendoOzono");
   
     //Alarm.timerRepeat(timeHumo*60, AlarmFunctionOFF);
-    Alarm.timerOnce(timeHumo*multipliSeg, AlarmFunctionOFF);  
+    alarmWork=Alarm.timerOnce(ton*multipliSeg, AlarmFunctionOFF);  
   }
   
   
 }
 void AlarmFunctionOFF(){
   if(work){
-   // digitalWrite(humo,LOW);
-    Serial.println("ApagoHumo");
-    alarmEspera = Alarm.timerOnce(timeEspera*multipliSeg, AlarmFunctionON);
+   digitalWrite(ozono,LOW);
+    Serial.println("ApagoOzono");
+    alarmEspera = Alarm.timerOnce(toff*multipliSeg, AlarmFunctionON);
   }
   
 }
@@ -88,7 +89,7 @@ void AlarmDisableWork(){
   work = false;
  // digitalWrite(humo,LOW);
   digitalWrite(ozono,LOW);
-  Alarm.timerOnce(timeVent*multipliSeg, AlarmApagoVent);
+ 
 }
  void requests(){
      server.on("/logo", HTTP_GET, [](AsyncWebServerRequest *request){
@@ -125,7 +126,32 @@ void AlarmDisableWork(){
   
 
  
-  
+server.on("/arranque", HTTP_GET, [](AsyncWebServerRequest *request){
+    work=true;
+    //Alarm.timerOnce(toff*multipliSeg, AlarmFunctionOFF);
+    alarmEspera = Alarm.timerOnce(1, AlarmFunctionON);
+    Serial.println("Alarmas creadas");
+    request->send(SPIFFS, "/index.html", String(), false, processor);
+  });
+  server.on("/stop", HTTP_GET, [](AsyncWebServerRequest *request){
+    work=false;
+    Alarm.disable(alarmWork);
+    Alarm.disable(alarmEspera);
+    //Alarm.timerOnce(toff*multipliSeg, AlarmFunctionOFF);
+    digitalWrite(ozono,LOW);
+    Serial.println("Paro");
+    request->send(SPIFFS, "/index.html", String(), false, processor);
+  });
+
+
+
+
+
+
+
+
+
+
   server.on("/indicadorOZ", HTTP_GET, [](AsyncWebServerRequest *request){ 
     String cadena;
     if(digitalRead(ozono))
@@ -190,6 +216,8 @@ server.on("/tiempodata", HTTP_GET, [](AsyncWebServerRequest *request){
       EEPROM.write(addr,ston.toInt());
       EEPROM.write(addr+1, stoff.toInt());
       EEPROM.commit();
+      ton = ston.toInt();
+      toff =stoff.toInt();
     }
     else {
       inputMessage = "No message sent";

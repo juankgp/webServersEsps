@@ -13,9 +13,6 @@ int totalHor = 0;
 int totalMin = 0;
 int totalSeg = 0;
 int totaltEspera = 0;
-int ton = 0;
-int toff = 0;
-
 
 
 
@@ -26,8 +23,6 @@ void setup() {
   pinMode(ozono,OUTPUT);//ozono
 
   digitalWrite(ozono,LOW);
- 
-  
  
   EEPROM.begin(512);
   ton = EEPROM.read(addr);
@@ -45,8 +40,7 @@ if(!SPIFFS.begin()){
         Serial.println("An Error has occurred while mounting SPIFFS");
         return;
   }
- //writetxt("FLA GUTIERREZ:KYARALIBY:");
- //writetxt("");
+
 
 readtxt();
 
@@ -54,9 +48,6 @@ readtxt();
   int seppass = wifiData.indexOf(":",sepssid+1);
   String ssidtext = wifiData.substring(0,sepssid);
   String passtext = wifiData.substring(sepssid+1,seppass);
-  //Serial.println("datos" + ssidtext + "---" +passtext);
-  //ssidtext = "FLA GUTIERREZ";
-  //passtext = "KYARALIBY";
 
 
  #ifdef ESP8266
@@ -103,7 +94,7 @@ readtxt();
   digitalWrite(vent2,HIGH);
   digitalWrite(vent3,HIGH);
   digitalWrite(vent4,HIGH);*/
-  Serial.println("Alarmas creadas");
+ 
 }
 
 void loop(){
