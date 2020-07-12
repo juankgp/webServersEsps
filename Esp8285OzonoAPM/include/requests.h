@@ -19,6 +19,7 @@ int timeEspera = 1;
 int timeVent = 5;
 int multipliSeg = 60;
 int timeTrabajo = 20;
+int addr = 0;
 
 void writetxt(String datos){
    myFile = SPIFFS.open(myFilePath, "w");
@@ -61,7 +62,7 @@ void AlarmFunctionON();
 void AlarmFunctionON(){
   if (work)
   {
-    digitalWrite(humo,HIGH);
+    //digitalWrite(humo,HIGH);
     minActual = minute();
     Serial.println("PrendoHumo");
   
@@ -73,22 +74,19 @@ void AlarmFunctionON(){
 }
 void AlarmFunctionOFF(){
   if(work){
-    digitalWrite(humo,LOW);
+   // digitalWrite(humo,LOW);
     Serial.println("ApagoHumo");
     alarmEspera = Alarm.timerOnce(timeEspera*multipliSeg, AlarmFunctionON);
   }
   
 }
 void AlarmApagoVent(){
-  digitalWrite(vent1,LOW);
-  digitalWrite(vent2,LOW);
-  digitalWrite(vent3,LOW);
-  digitalWrite(vent4,LOW);
+ 
    Serial.println("ApagoVentiladores");
 }
 void AlarmDisableWork(){
   work = false;
-  digitalWrite(humo,LOW);
+ // digitalWrite(humo,LOW);
   digitalWrite(ozono,LOW);
   Alarm.timerOnce(timeVent*multipliSeg, AlarmApagoVent);
 }
@@ -114,36 +112,20 @@ void AlarmDisableWork(){
   server.on("/onozono", HTTP_GET, [](AsyncWebServerRequest *request){
     Serial.println("Prende ozono y vents");
     digitalWrite(ozono,HIGH);
-    digitalWrite(vent1,HIGH);
-    digitalWrite(vent2,HIGH);
-    digitalWrite(vent3,HIGH);
-    digitalWrite(vent4,HIGH);
+    
    
     request->send(SPIFFS, "/config.html", String(), false, processor);
   });
   server.on("/offozono", HTTP_GET, [](AsyncWebServerRequest *request){
     Serial.println("apaga ozono y vents");
     digitalWrite(ozono,LOW);
-    digitalWrite(vent1,LOW);
-    digitalWrite(vent2,LOW);
-    digitalWrite(vent3,LOW);
-    digitalWrite(vent4,LOW);
+    
     request->send(SPIFFS, "/config.html", String(), false, processor);
   });
   
 
-  server.on("/timeuc", HTTP_GET, [](AsyncWebServerRequest *request){
-    String cadena = "Hola Mundo JK!!!!!!!!!!!1";
-  request->send_P(200,"text/plain",cadena.c_str());
-  });
-  server.on("/indicadorHU", HTTP_GET, [](AsyncWebServerRequest *request){ 
-    String cadena;
-    if(digitalRead(humo))
-      cadena = "led-green-on";
-    else
-      cadena = "led-red-off";
-  request->send_P(200,"text/plain",cadena.c_str());
-  });
+ 
+  
   server.on("/indicadorOZ", HTTP_GET, [](AsyncWebServerRequest *request){ 
     String cadena;
     if(digitalRead(ozono))
@@ -152,14 +134,7 @@ void AlarmDisableWork(){
       cadena = "led-red-off";
   request->send_P(200,"text/plain",cadena.c_str());
   });
-  server.on("/indicadorVT", HTTP_GET, [](AsyncWebServerRequest *request){ 
-    String cadena;
-    if(digitalRead(vent1))
-      cadena = "led-green-on";
-    else
-      cadena = "led-red-off";
-  request->send_P(200,"text/plain",cadena.c_str());
-  });
+  
 
 
 ////funcion para capturar las credenciales de wifi
@@ -205,18 +180,16 @@ server.on("/tiempodata", HTTP_GET, [](AsyncWebServerRequest *request){
       
       String tdata = String(inputMessage);
       
-    /*int sepssid = wifiData.indexOf(":");
-    int seppass = wifiData.indexOf(":",sepssid+1);
-    String ssidtext = wifiData.substring(0,sepssid);
-    String passtext = wifiData.substring(sepssid+1,seppass);
-     Serial.println("Datos Wifi" + ssidtext + "----" + passtext);*/
-     Serial.println("Datos Tiempo: " + tdata);
+    int septon = tdata.indexOf(":");
+    int septoff = tdata.indexOf(":",septon+1);
+    String ston = tdata.substring(0,septon);
+    String stoff = tdata.substring(septon+1,septoff);
+     Serial.println("Datos de tiempo" + ston + "----" + stoff);
     
      //writetxt(wifiData);
-     work =true;
-     Alarm.disable(alarmWork);
-     Alarm.timerOnce(timeInit*multipliSeg, AlarmFunctionON);
-    alarmWork=Alarm.timerOnce(tdata.toInt()*multipliSeg, AlarmDisableWork);
+      EEPROM.write(addr,ston.toInt());
+      EEPROM.write(addr+1, stoff.toInt());
+      EEPROM.commit();
     }
     else {
       inputMessage = "No message sent";

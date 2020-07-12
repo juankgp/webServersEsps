@@ -8,13 +8,15 @@
 #include <Wire.h>
 #include "ota.h"
 
-int addr = 0;
+
 int totalHor = 0;
 int totalMin = 0;
 int totalSeg = 0;
 int totaltEspera = 0;
+int ton = 0;
+int toff = 0;
 
-int cambioluz=0;
+
 
 
 void setup() {
@@ -22,27 +24,18 @@ void setup() {
 #pragma region //Configuracio
   Serial.begin(115200);
   pinMode(ozono,OUTPUT);//ozono
-  pinMode(humo,OUTPUT);
-  pinMode(luces,OUTPUT);
-  pinMode(vent1,OUTPUT);
-  pinMode(vent2,OUTPUT);
-  pinMode(vent3,OUTPUT);
-  pinMode(vent4,OUTPUT);
- 
-  digitalWrite(humo,LOW);
+
   digitalWrite(ozono,LOW);
-  digitalWrite(luces,LOW);
-  digitalWrite(vent1,LOW);
-  digitalWrite(vent2,LOW);
-  digitalWrite(vent3,LOW);
-  digitalWrite(vent4,LOW);
+ 
   
  
   EEPROM.begin(512);
+  ton = EEPROM.read(addr);
+  toff = EEPROM.read(addr+1);
   
   char host[16];
-  Serial.println("Iniciando");
-
+  Serial.println("Iniciando: " + String(ton) + "-------"+ String(toff));
+  Serial.println("Tiempos guardados");
   Wire.begin(9, 10);
 
   //AsyncWiFiManager wifiManager(&server,&dns);
@@ -103,8 +96,7 @@ readtxt();
  
   requests();
   //*****************************************************
-  Alarm.timerOnce(timeInit*multipliSeg, AlarmFunctionON);
-  alarmWork=Alarm.timerOnce(timeTrabajo*multipliSeg, AlarmDisableWork);
+  
   
   /*digitalWrite(ozono,HIGH);
   digitalWrite(vent1,HIGH);

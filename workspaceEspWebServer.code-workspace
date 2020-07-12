@@ -11,6 +11,12 @@
 		},
 		{
 			"path": "PruebaEsp07"
+		},
+		{
+			"path": "esp3LAmpCELChange/test"
+		},
+		{
+			"path": "esp3LAmpCELChange"
 		}
 	],
     "settings": {}
