@@ -16,8 +16,16 @@ void setup() {
 #pragma region //Configuracio
   Serial.begin(115200);
   pinMode(ozono,OUTPUT);//ozono
-
+ Wire.begin(9, 10);
   digitalWrite(ozono,LOW);
+   setSyncProvider(RTC.get);
+	setSyncInterval(300);
+
+   if(timeStatus() != timeSet)
+        Serial.println("Unable to sync with the RTC");
+    else
+        Serial.println("RTC has set the system time");
+
  
   EEPROM.begin(512);
   ton = EEPROM.read(addr);
@@ -26,6 +34,22 @@ void setup() {
   tMinIni = EEPROM.read(addr+3);
   tHoraFin = EEPROM.read(addr+4);
   tMinFin = EEPROM.read(addr+5);
+  estadoHorario = EEPROM.read(addr+6);
+  Serial << "Estado de horario " << estadoHorario << endl;
+  if(estadoHorario == 1){
+    Serial << "Alarmas creadas inicio: " << "Hora: " << tHoraIni <<
+    "Minuto: " << tMinIni << "FIN: " << tHoraFin << "Minuto: " << tMinFin << endl;
+    alarmHorarioOn =  Alarm.alarmRepeat(tHoraIni,tMinIni,0, AlarmHorarioON);  
+    alarmHorarioOff =  Alarm.alarmRepeat(tHoraFin,tMinFin,0, AlarmHorarioOFF);  
+    estadoHorario = true;
+  }
+  else
+  {
+    Serial << "Alarmas no creadas horario desactivad" << endl;
+    estadoHorario = false;
+    Alarm.disable(alarmHorarioOn);
+    Alarm.disable(alarmHorarioOff);
+  }
   
   char host[2];
   /*Serial.println("Iniciando: " + String(ton) + "-------"+ 
@@ -37,7 +61,7 @@ void setup() {
   "---" << tHoraFin << "---" << tMinFin << endl;
   //Serial.println("Tiempos guardados");
   Serial << "Tiempos Guardados" <<endl;
-  Wire.begin(9, 10);
+ 
 
   //AsyncWiFiManager wifiManager(&server,&dns);
   //wifiManager.resetSettings();
@@ -80,14 +104,7 @@ readtxt();
      tm.Month = 07;
      tm.Year = 2020 - 1970;      // tmElements_t.Year is the offset from 1970
      RTC.write(tm);*/     
-  setSyncProvider(RTC.get);
-	setSyncInterval(300);
-
-   if(timeStatus() != timeSet)
-        Serial.println("Unable to sync with the RTC");
-    else
-        Serial.println("RTC has set the system time");
-
+ 
 
   #pragma endregion
  

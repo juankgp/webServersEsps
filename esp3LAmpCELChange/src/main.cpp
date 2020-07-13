@@ -394,10 +394,16 @@ digitalWrite(lampSiren,LOW);
    snprintf(host, 16, "ESP%012llX", ESP.getEfuseMac());
     setTime(1,1,1,1,1,2020);
    EEPROM.begin(512);
-  iHora = EEPROM.read(addr);
-  iMin = EEPROM.read(addr+1);
-  iSeg = EEPROM.read(addr+2);
-  itEspera = EEPROM.read(addr+3);
+ setInterval(function() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("lamp1").innerHTML = this.responseText; 
+        }
+    };  
+    xhttp.open("GET", "/lamp1", true);   
+    xhttp.send();
+}, 1000);
   
 
   // Initialize SPIFFS

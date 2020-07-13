@@ -10,13 +10,40 @@ td {
     border-bottom: 1px solid black;
 }
 
+th {
+    height: 20px;
+    color: white;
+}
+
+.container {
+    height: 70px;
+    position: relative;
+    display: flex;
+}
+
 .center {
-    align-content: center;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
 }
 
 .checHorario {
     width: 20px;
     height: 20px;
+}
+
+.textHorario {
+    color: #f1f1f1;
+    font-size: 20px;
+    padding: 5px;
+    align-content: center;
+    text-shadow: 2px 2px 8px #70c9c1;
+    margin: 0 auto;
+    max-width: 350px;
+    text-align: center;
 }
 
 .titulo {
@@ -28,11 +55,6 @@ td {
     margin: 0 auto;
     max-width: 350px;
     text-align: center;
-}
-
-th {
-    height: 20px;
-    color: white;
 }
 
 
@@ -297,19 +319,32 @@ th {
     padding: 30px;
 }
 
-.controles {
-    position: absolute;
-    left: 30%;
-    top: 400px;
+.myButton {
+    max-width: 350px;
+    box-shadow: 3px 4px 0px 0px #6e9ec2;
+    background: linear-gradient(to bottom, #ededed 5%, #bab1ba 100%);
+    background-color: #ededed;
+    border-radius: 15px;
+    border: 1px solid #d1b6d1;
+    display: inline-block;
+    margin: 10px;
+    cursor: pointer;
+    color: #0f1213;
+    font-family: Arial;
+    font-size: 2vw;
+    padding: 7px 25px;
+    text-decoration: none;
+    text-shadow: 0px 1px 0px #e1e2ed;
 }
 
-.estados {
-    margin: 0;
-    position: absolute;
-    top: 25%;
-    left: 50%;
-    -ms-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
+.myButton:hover {
+    background: linear-gradient(to bottom, #bab1ba 5%, #ededed 100%);
+    background-color: #bab1ba;
+}
+
+.myButton:active {
+    position: relative;
+    top: 1px;
 }
 
 .led-green-on {

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=0.5">
     <link rel="stylesheet" href="style.css">
     <title>WebControl</title>
 </head>
@@ -20,61 +20,68 @@
     <span style=" color: aliceblue; font-size:30px;cursor:pointer" onclick="openNav()">&#9776; Menú</span>
     <h2 class="titulo">Control--Estatus</h2>
     <article>
+        <h1 class="titulo">Est. Ozono</h1>
+        <div class="container">
+            <div class="center">
+                <p class="" id="indicadorOZ"></p>
+            </div>
+        </div>
+    </article>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
 
+    <br>
 
-        <table class="estados">
-            <tr>
+    <article>
+        <div class="container">
+            <div class="center">
 
-                <th>
-                    <h1>Est. Ozono</h1>
-                </th>
+                <table>
+                    <tr>
+                        <th>
+                            <h1>Inicio</h1>
+                        </th>
 
-            </tr>
-            <tr>
+                        <th>
+                            <h1>Paro</h1>
+                        </th>
+                        <th>
+                            <h1>Horario</h1>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td class="boton">
+                            <a class="play-btn" href="/arranque"></a>
+                        </td>
 
-                <td class="luces">
-                    <p class="" id="indicadorOZ"></p>
-                </td>
+                        <td class="boton">
 
-            </tr>
-        </table>
-        <table class="controles">
-            <tr>
-                <th>
-                    <h1>Inicio</h1>
-                </th>
+                            <a class="stop-btn" href="/stop"></a>
+                        </td>
+                        <td class="boton">
+                            <p class="textHorario" id="horario">%HORARIO%</p>
+                            <a href="/activeHorario?value=prube" id="iniHorario">
+                                <input class="checHorario" type="checkbox" id="tHorario" value="">
 
-                <th>
-                    <h1>Paro</h1>
-                </th>
-                <th>
-                    <h1>Horario</h1>
-                </th>
-            </tr>
-            <tr>
-                <td class="boton">
-                    <a class="play-btn" href="/arranque"></a>
-                </td>
-
-                <td class="boton">
-
-                    <a class="stop-btn" href="/stop"></a>
-                </td>
-                <td class="boton">
-                    <a href="/activeHorario?value=prube" id="iniHorario">
-                        <input class="checHorario" type="checkbox" id="tHorario" value="">
-
-                    </a>
-                    <label for="">Activar/Desactivar horario</label>
-                    <div class="container">
-                        <div class="center">
-                            <a href="" id="sendHorario"><button class="myButton" onclick="getHorario(this)" >Enviar</button></a>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        </table>
-
+                            </a>
+                            <label for="">Activar/Desactivar horario</label>
+                            <div class="container">
+                                <div class="center">
+                                    <a href="" id="sendHorario"><button class="myButton" onclick="getHorario(this)" >Enviar</button></a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
 
     </article>
 
@@ -133,6 +140,16 @@
         }
 
     }
+    setInterval(function() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("horario").innerHTML = this.responseText;
+            }
+        };
+        xhttp.open("GET", "/horasHorario", true);
+        xhttp.send();
+    }, 1000);
 
     function openNav() {
         document.getElementById("mySidenav").style.width = "250px";

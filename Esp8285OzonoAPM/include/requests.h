@@ -66,9 +66,11 @@ void AlarmHorarioON();
 
 void AlarmHorarioON(){
   digitalWrite(ozono,HIGH);
+  Serial << "Prendo Por Horario" << endl;
 }
 void AlarmHorarioOFF(){
   digitalWrite(ozono,LOW);
+  Serial << "Apago Por Horario" << endl;
 }
 void AlarmFunctionON(){
   if (work)
@@ -160,7 +162,14 @@ server.on("/arranque", HTTP_GET, [](AsyncWebServerRequest *request){
   });
 
 
-
+server.on("/horasHorario", HTTP_GET, [](AsyncWebServerRequest *request){
+    String cadena;
+    
+    cadena = "Hora ON: " + String(tHoraIni) + ":" + String(tMinIni) +"<br>"+ "Hora OFF: " +
+     String(tHoraFin) + ":" + String(tMinFin);
+    
+  request->send_P(200,"text/plain",cadena.c_str());
+});
   server.on("/indicadorOZ", HTTP_GET, [](AsyncWebServerRequest *request){ 
     String cadena;
     if(digitalRead(ozono))
@@ -268,6 +277,13 @@ server.on("/tiempodata", HTTP_GET, [](AsyncWebServerRequest *request){
       tMinIni = sMinIni.toInt();
       tHoraFin = sHoraFin.toInt();
       tMinFin = sMinFin.toInt();
+      Alarm.disable(alarmHorarioOn);
+      Alarm.disable(alarmHorarioOff);
+      if(estadoHorario == true){
+        alarmHorarioOn =  Alarm.alarmRepeat(tHoraIni,tMinIni,0, AlarmHorarioON);  
+        alarmHorarioOff =  Alarm.alarmRepeat(tHoraFin,tMinFin,0, AlarmHorarioOFF);  
+      }
+      
     }
     else {
       inputMessage = "No message sent";
@@ -275,6 +291,45 @@ server.on("/tiempodata", HTTP_GET, [](AsyncWebServerRequest *request){
    
   
    request->send(SPIFFS, "/config.html", String(), false, processor);
+  });
+
+server.on("/activeHorario", HTTP_GET, [](AsyncWebServerRequest *request){
+    //Serial.println("En ini");
+    String inputMessage;
+    // GET input1 value on <ESP_IP>/slider?value=<inputMessage>
+    if (request->hasParam(PARAM_INPUT_2)) {
+     // delay(1000);
+     // Serial.println("Llego value");
+      inputMessage = request->getParam(PARAM_INPUT_2)->value();
+      
+      String tdata = String(inputMessage);
+     Serial << "ACTIVAR: "<< tdata << endl;
+     if(tdata == "activado"){
+       estadoHorario = true;
+
+      alarmHorarioOn =  Alarm.alarmRepeat(tHoraIni,tMinIni,0, AlarmHorarioON);  
+      alarmHorarioOff =  Alarm.alarmRepeat(tHoraFin,tMinFin,0, AlarmHorarioOFF);  
+      EEPROM.write(addr+6, 1);
+      EEPROM.commit();
+      Serial <<"Alarmas creadas de horario"<< endl;
+     }
+     else
+     {
+       Serial <<"Alarmas desabilitadas de horario"<< endl;
+       EEPROM.write(addr+6, 0);
+      EEPROM.commit();
+       estadoHorario = false;
+       Alarm.disable(alarmHorarioOn);
+       Alarm.disable(alarmHorarioOff);
+     }
+
+    }
+    else {
+      inputMessage = "No message sent";
+    }
+   
+  
+   request->send(SPIFFS, "/index.html", String(), false, processor);
   });
 
 server.on("/ini", HTTP_GET, [](AsyncWebServerRequest *request){//sincronizoReloj
@@ -326,38 +381,7 @@ server.on("/ini", HTTP_GET, [](AsyncWebServerRequest *request){//sincronizoReloj
 
    request->send(SPIFFS, "/config.html", String(), false, processor);
   });
- server.on("/activeHorario", HTTP_GET, [](AsyncWebServerRequest *request){
-    //Serial.println("En ini");
-    String inputMessage;
-    // GET input1 value on <ESP_IP>/slider?value=<inputMessage>
-    if (request->hasParam(PARAM_INPUT_2)) {
-     // delay(1000);
-     // Serial.println("Llego value");
-      inputMessage = request->getParam(PARAM_INPUT_2)->value();
-      
-      String tdata = String(inputMessage);
-     Serial << "ACTIVAR: "<< tdata << endl;
-     if(tdata == "activado"){
-       estadoHorario = true;
-      alarmHorarioOn =  Alarm.alarmRepeat(tHoraIni,tMinIni,0, AlarmHorarioON);  
-      alarmHorarioOff =  Alarm.alarmRepeat(tHoraFin,tMinFin,0, AlarmHorarioOFF);  
-     }
-     else
-     {
-       estadoHorario = false;
-       Alarm.disable(alarmHorarioOn);
-       Alarm.disable(alarmHorarioOff);
-     }
-
-    }
-    else {
-      inputMessage = "No message sent";
-    }
-   
-  
-   request->send(SPIFFS, "/index.html", String(), false, processor);
-  });
-
+ 
 
  }
  
