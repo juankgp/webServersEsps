@@ -20,6 +20,10 @@
 		},
 		{
 			"path": "contorlLamparasBiosecurity"
+		},
+		{
+			"name": "OTAupdateEsp8266",
+			"path": "../OTAupdateEsp8266"
 		}
 	],
 	"settings": {
