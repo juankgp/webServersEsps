@@ -52,16 +52,7 @@ else{
 //#endif
 }
 
-void appendtxt(String datos){
-  myFile = SPIFFS.open(myFilePath, "a");
-  if(myFile.print(datos)){
-    Serial.println("Message successfully appended");  
-  }
-  else{
-    Serial.print("Appending failled!");  
-  }
-  myFile.close();
-}
+
 boolean readtxt(){
   boolean haydata=false;
   myFile = SPIFFS.open(myFilePath, "r");

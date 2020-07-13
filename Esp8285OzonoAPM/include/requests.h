@@ -1,28 +1,28 @@
 #include <DS3232RTC.h>   
 #include <ESPAsyncWebServer.h> 
 #include "pinout.h"
-const char* PARAM_INPUT_1 = "state";
-const char* PARAM_INPUT_2 = "value";
+const char* PARAM_INPUT_1 = "";
+const char* PARAM_INPUT_2 = "";
 DS3232RTC RTC;
 String timeValue = "10";
-boolean work = false;
+bool work = false;
 AlarmId alarmWork, alarmEspera,alarmHorarioOn,alarmHorarioOff;
 AsyncWebServer server(80);
 File myFile;
 
 const char* myFilePath = "/wifi.txt";
-int minActual = 0;
 
-boolean estadoHorario = false;
-int multipliSeg = 1;
-int timeTrabajo = 20;
-int addr = 0;
-int ton = 0;
-int toff = 0;
-int tHoraIni = 0;
-int tMinIni = 0;
-int tHoraFin = 0;
-int tMinFin = 0;
+
+bool estadoHorario = false;
+byte multipliSeg = 1;
+byte timeTrabajo = 20;
+byte addr = 0;
+byte ton = 0;
+byte toff = 0;
+byte tHoraIni = 0;
+byte tMinIni = 0;
+byte tHoraFin = 0;
+byte tMinFin = 0;
 
 void writetxt(String datos){
    myFile = SPIFFS.open(myFilePath, "w");

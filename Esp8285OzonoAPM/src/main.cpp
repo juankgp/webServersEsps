@@ -13,7 +13,7 @@
 
 void setup() {
 
-#pragma region //Configuracio
+
   Serial.begin(115200);
   pinMode(ozono,OUTPUT);//ozono
  Wire.begin(9, 10);
@@ -106,7 +106,7 @@ readtxt();
      RTC.write(tm);*/     
  
 
-  #pragma endregion
+
  
   requests();
   //*****************************************************
