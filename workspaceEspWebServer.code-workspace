@@ -24,6 +24,9 @@
 		{
 			"name": "OTAupdateEsp8266",
 			"path": "../OTAupdateEsp8266"
+		},
+		{
+			"path": "Esp8285OzonoAPMVectores"
 		}
 	],
 	"settings": {

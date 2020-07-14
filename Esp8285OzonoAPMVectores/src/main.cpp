@@ -8,6 +8,7 @@
 #include <Wire.h>
 #include "ota.h"
 
+
 void setup() {
 
 
@@ -103,55 +104,7 @@ readtxt();
      RTC.write(tm);*/     
  
 
-server.on("/ini", HTTP_GET, [](AsyncWebServerRequest *request){//sincronizoReloj
-    //Serial.println("En ini");
-    String inputMessage;
-    // GET input1 value on <ESP_IP>/slider?value=<inputMessage>
-    if (request->hasParam(PARAM_INPUT_2)) {
-     // delay(1000);
-     // Serial.println("Llego value");
-      inputMessage = request->getParam(PARAM_INPUT_2)->value();
-      
-      timeValue = String(inputMessage);
-      
-     // Serial.println("PARAM_INPUT2 "+ timeValue);
-      int sepAnio = timeValue.indexOf(":");
-      int sepMes = timeValue.indexOf(":",sepAnio+1);
-      int sepDia = timeValue.indexOf(":",sepMes+1);
-      int sepHora = timeValue.indexOf(":",sepDia+1);
-      int sepMin = timeValue.indexOf(":",sepHora+1);
-      int sepSeg = timeValue.indexOf(":",sepMin+1);
-      String anio = timeValue.substring(0,sepAnio);
-      String mes = timeValue.substring(sepAnio+1,sepMes);
-      String dia = timeValue.substring(sepMes+1,sepDia);
-      String hora = timeValue.substring(sepDia+1,sepHora);
-      String minuto = timeValue.substring(sepHora+1,sepMin);
-      String segundo = timeValue.substring(sepMin+1,sepSeg);
-      
-      
-      Serial << hora<< "-" << minuto << "-" << segundo << 
-      "-" << dia << "-" <<  (mes.toInt()+1) << "-" << anio << endl;
 
-      tmElements_t tm;
-        tm.Hour = hora.toInt();               // set the RTC to an arbitrary time
-       tm.Minute = minuto.toInt();
-       tm.Second = segundo.toInt()+1;
-       tm.Day = dia.toInt();
-       tm.Month = mes.toInt()+1;//el mas es mas 1 porque el html empiza los mese desde 0
-       tm.Year = anio.toInt() - 1970;      // tmElements_t.Year is the offset from 1970
-       RTC.write(tm);     
-
-      setSyncProvider(RTC.get);
-	    setSyncInterval(300);
-     
-     
-    }
-    else {
-      inputMessage = "No message sent"; 
-    }
-
-   request->send(SPIFFS, "/config.html", String(), false, processor);
-  });
  
   requests();
   //*****************************************************

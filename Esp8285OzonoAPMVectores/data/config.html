@@ -140,7 +140,7 @@
         var tHorariofin = document.getElementById("tHorariofin").value;
 
         var varTime = document.getElementById("sendHorario");
-        var dataHorario = tHorarioini + ":" + tHorariofin + ":";
+        var dataHorario = tHorarioini + ":" + tHorariofin;
         varTime.setAttribute("href", "/dataHorario?value=" + dataHorario)
         window.location = "/config";
         return false;
@@ -181,7 +181,7 @@
         var ttrabooff = document.getElementById("tiempoTrabOFF").value;
 
         var varTime = document.getElementById("sendTime");
-        varTime.setAttribute("href", "/tiempodata?value=" + ttrabon + ":" + ttrabooff + ":")
+        varTime.setAttribute("href", "/tiempodata?value=" + ttrabon + ":" + ttrabooff)
         window.location = "/config";
         return false;
 
