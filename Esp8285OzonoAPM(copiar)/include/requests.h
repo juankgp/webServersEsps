@@ -1,8 +1,8 @@
 #include <DS3232RTC.h>   
 #include <ESPAsyncWebServer.h> 
 #include "pinout.h"
-const char* PARAM_INPUT_1 = "state";
-const char* PARAM_INPUT_2 = "value";
+const char* PARAM_INPUT_1 = "hola";
+const char* PARAM_INPUT_2 = "adios";
 DS3232RTC RTC;
 String timeValue = "10";
 bool work = false;
@@ -14,15 +14,15 @@ const char* myFilePath = "/wifi.txt";
 
 
 bool estadoHorario = false;
-byte multipliSeg = 1;
-byte timeTrabajo = 20;
-byte addr = 0;
-byte ton = 0;
-byte toff = 0;
-byte tHoraIni = 0;
-byte tMinIni = 0;
-byte tHoraFin = 0;
-byte tMinFin = 0;
+int multipliSeg = 1;
+int timeTrabajo = 20;
+int addr = 0;
+int ton = 0;
+int toff = 0;
+int tHoraIni = 0;
+int tMinIni = 0;
+int tHoraFin = 0;
+int tMinFin = 0;
 
 void writetxt(String datos){
    myFile = SPIFFS.open(myFilePath, "w");
@@ -332,55 +332,8 @@ server.on("/activeHorario", HTTP_GET, [](AsyncWebServerRequest *request){
    request->send(SPIFFS, "/index.html", String(), false, processor);
   });
 
-server.on("/ini", HTTP_GET, [](AsyncWebServerRequest *request){//sincronizoReloj
-    //Serial.println("En ini");
-    String inputMessage;
-    // GET input1 value on <ESP_IP>/slider?value=<inputMessage>
-    if (request->hasParam(PARAM_INPUT_2)) {
-     // delay(1000);
-     // Serial.println("Llego value");
-      inputMessage = request->getParam(PARAM_INPUT_2)->value();
-      
-      timeValue = String(inputMessage);
-      
-     // Serial.println("PARAM_INPUT2 "+ timeValue);
-      int sepAnio = timeValue.indexOf(":");
-      int sepMes = timeValue.indexOf(":",sepAnio+1);
-      int sepDia = timeValue.indexOf(":",sepMes+1);
-      int sepHora = timeValue.indexOf(":",sepDia+1);
-      int sepMin = timeValue.indexOf(":",sepHora+1);
-      int sepSeg = timeValue.indexOf(":",sepMin+1);
-      String anio = timeValue.substring(0,sepAnio);
-      String mes = timeValue.substring(sepAnio+1,sepMes);
-      String dia = timeValue.substring(sepMes+1,sepDia);
-      String hora = timeValue.substring(sepDia+1,sepHora);
-      String minuto = timeValue.substring(sepHora+1,sepMin);
-      String segundo = timeValue.substring(sepMin+1,sepSeg);
-      
-      
-      Serial << hora<< "-" << minuto << "-" << segundo << 
-      "-" << dia << "-" <<  (mes.toInt()+1) << "-" << anio << endl;
 
-      tmElements_t tm;
-        tm.Hour = hora.toInt();               // set the RTC to an arbitrary time
-       tm.Minute = minuto.toInt();
-       tm.Second = segundo.toInt()+1;
-       tm.Day = dia.toInt();
-       tm.Month = mes.toInt()+1;//el mas es mas 1 porque el html empiza los mese desde 0
-       tm.Year = anio.toInt() - 1970;      // tmElements_t.Year is the offset from 1970
-       RTC.write(tm);     
-
-      setSyncProvider(RTC.get);
-	    setSyncInterval(300);
-     
-     
-    }
-    else {
-      inputMessage = "No message sent"; 
-    }
-
-   request->send(SPIFFS, "/config.html", String(), false, processor);
-  });
  
 
  }
+ 

@@ -1,15 +1,15 @@
-#include <Arduino.h>
-#include <ESPAsyncWebServer.h>
-#include <Updater.h>
-#include <ESP8266mDNS.h>
-#include <Hash.h>
-#include <FS.h>
-#include <TimeLib.h>
-#include <EEPROM.h>
-#include <TimeAlarms.h>
-#include <DS3232RTC.h>     
-#include <Streaming.h>      
-#include <Wire.h>
+#include <Arduino.h>//si
+#include <ESPAsyncWebServer.h>//si
+#include <Updater.h>//si
+#include <ESP8266mDNS.h>//si
+#include <Hash.h>//si
+#include <FS.h>//si
+#include <TimeLib.h>//si
+#include <EEPROM.h>//si
+#include <TimeAlarms.h>//si
+#include <DS3232RTC.h>//si     
+#include <Streaming.h>//si      
+#include <Wire.h>//si
 
 File myFile;
 const char* myFilePath = "/wifi.txt";
