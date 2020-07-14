@@ -1,6 +1,14 @@
 #include <DS3232RTC.h>   
 #include <ESPAsyncWebServer.h> 
 #include "pinout.h"
+#include <Separador.h>
+#include <vector>
+using std::vector;
+
+using VS=vector<String>;
+Separador s;
+
+
 const char* PARAM_INPUT_1 = "state";
 const char* PARAM_INPUT_2 = "value";
 DS3232RTC RTC;
@@ -194,11 +202,7 @@ server.on("/wifidata", HTTP_GET, [](AsyncWebServerRequest *request){
       
       String wifiData = String(inputMessage);
       
-    /*int sepssid = wifiData.indexOf(":");
-    int seppass = wifiData.indexOf(":",sepssid+1);
-    String ssidtext = wifiData.substring(0,sepssid);
-    String passtext = wifiData.substring(sepssid+1,seppass);
-     Serial.println("Datos Wifi" + ssidtext + "----" + passtext);*/
+    
      Serial << "Datos Wifi: " << wifiData << endl;
     
      writetxt(wifiData);
@@ -223,19 +227,25 @@ server.on("/tiempodata", HTTP_GET, [](AsyncWebServerRequest *request){
       inputMessage = request->getParam(PARAM_INPUT_2)->value();
       
       String tdata = String(inputMessage);
-      
-    int septon = tdata.indexOf(":");
-    int septoff = tdata.indexOf(":",septon+1);
-    String ston = tdata.substring(0,septon);
-    String stoff = tdata.substring(septon+1,septoff);
-     Serial <<"Datos de tiempo" << ston + "----"<< stoff << endl;
+      vector<String> vComandos;
+      //String vComandos[2];
+    for(int i=0;i<2;i++){
+      String dato = s.separa(tdata,':',i);
+      //vComandos[i]=dato;
     
-     //writetxt(wifiData);
-      EEPROM.write(addr,ston.toInt());
-      EEPROM.write(addr+1, stoff.toInt());
+       vComandos.push_back(dato);
+    }
+    /*for(int i=0;i<2;i++){
+     
+      Serial << "Llego: " <<vComandos[i] << endl;
+       
+    }*/
+    
+      EEPROM.write(addr,vComandos[0].toInt());
+      EEPROM.write(addr+1, vComandos[1].toInt());
       EEPROM.commit();
-      ton = ston.toInt();
-      toff =stoff.toInt();
+      ton = vComandos[0].toInt();
+      toff =vComandos[1].toInt();
     }
     else {
       inputMessage = "No message sent";
@@ -255,28 +265,27 @@ server.on("/tiempodata", HTTP_GET, [](AsyncWebServerRequest *request){
       inputMessage = request->getParam(PARAM_INPUT_2)->value();
       
       String tdata = String(inputMessage);
-      //Serial << "Horario: " <<  tdata << endl;
-      int sepHoraIni= tdata.indexOf(":");
-      int sepMinIni = tdata.indexOf(":",sepHoraIni+1);
-      int sepHoraFin= tdata.indexOf(":",sepMinIni+1);
-      int sepMinFin = tdata.indexOf(":",sepHoraFin+1);
-      String sHoraIni = tdata.substring(0,sepHoraIni);
-      String sMinIni = tdata.substring(sepHoraIni+1,sepMinIni);
-      String sHoraFin = tdata.substring(sepMinIni+1,sepHoraFin);
-      String sMinFin = tdata.substring(sepHoraFin+1,sepMinFin);
-      Serial << "Datos de Horario: "  << sHoraIni << "----" << sMinIni << "------" 
-      << sHoraFin << "----" << sMinFin;
+
+    vector<String> vComandos;
+    for(int i=0;i<4;i++){
+      String dato = s.separa(tdata,':',i);
+      vComandos.push_back(dato);
+       
+    }
+    
+      Serial << "Datos de Horario: "  << vComandos[0] << ":" << vComandos[1] << "------" 
+      << vComandos[2] << ":" << vComandos[3];
     
      //writetxt(wifiData);
-      EEPROM.write(addr +2,sHoraIni.toInt());
-      EEPROM.write(addr+3, sMinIni.toInt());
-      EEPROM.write(addr +4,sHoraFin.toInt());
-      EEPROM.write(addr+5, sMinFin.toInt());
+      EEPROM.write(addr +2,vComandos[0].toInt());
+      EEPROM.write(addr+3, vComandos[1].toInt());
+      EEPROM.write(addr +4,vComandos[2].toInt());
+      EEPROM.write(addr+5, vComandos[3].toInt());
       EEPROM.commit();
-      tHoraIni = sHoraIni.toInt();
-      tMinIni = sMinIni.toInt();
-      tHoraFin = sHoraFin.toInt();
-      tMinFin = sMinFin.toInt();
+      tHoraIni = vComandos[0].toInt();
+      tMinIni = vComandos[1].toInt();
+      tHoraFin = vComandos[2].toInt();
+      tMinFin = vComandos[3].toInt();
       Alarm.disable(alarmHorarioOn);
       Alarm.disable(alarmHorarioOff);
       if(estadoHorario == true){
@@ -342,32 +351,24 @@ server.on("/ini", HTTP_GET, [](AsyncWebServerRequest *request){//sincronizoReloj
       inputMessage = request->getParam(PARAM_INPUT_2)->value();
       
       timeValue = String(inputMessage);
+    vector<String> vComandos;
+    for(int i=0;i<6;i++){
+      String dato = s.separa(timeValue,':',i);
+      vComandos.push_back(dato);
+       
+    }
+    
       
-     // Serial.println("PARAM_INPUT2 "+ timeValue);
-      int sepAnio = timeValue.indexOf(":");
-      int sepMes = timeValue.indexOf(":",sepAnio+1);
-      int sepDia = timeValue.indexOf(":",sepMes+1);
-      int sepHora = timeValue.indexOf(":",sepDia+1);
-      int sepMin = timeValue.indexOf(":",sepHora+1);
-      int sepSeg = timeValue.indexOf(":",sepMin+1);
-      String anio = timeValue.substring(0,sepAnio);
-      String mes = timeValue.substring(sepAnio+1,sepMes);
-      String dia = timeValue.substring(sepMes+1,sepDia);
-      String hora = timeValue.substring(sepDia+1,sepHora);
-      String minuto = timeValue.substring(sepHora+1,sepMin);
-      String segundo = timeValue.substring(sepMin+1,sepSeg);
-      
-      
-      Serial << hora<< "-" << minuto << "-" << segundo << 
-      "-" << dia << "-" <<  (mes.toInt()+1) << "-" << anio << endl;
+      Serial << vComandos[3]<< "-" << vComandos[4] << "-" << vComandos[5] << 
+      "-" << vComandos[2] << "-" <<  (vComandos[1].toInt()+1) << "-" << vComandos[0] << endl;
 
       tmElements_t tm;
-        tm.Hour = hora.toInt();               // set the RTC to an arbitrary time
-       tm.Minute = minuto.toInt();
-       tm.Second = segundo.toInt()+1;
-       tm.Day = dia.toInt();
-       tm.Month = mes.toInt()+1;//el mas es mas 1 porque el html empiza los mese desde 0
-       tm.Year = anio.toInt() - 1970;      // tmElements_t.Year is the offset from 1970
+        tm.Hour = vComandos[3].toInt();               // set the RTC to an arbitrary time
+       tm.Minute = vComandos[4].toInt();
+       tm.Second = vComandos[5].toInt()+1;
+       tm.Day = vComandos[2].toInt();
+       tm.Month = vComandos[1].toInt()+1;//el mas es mas 1 porque el html empiza los mese desde 0
+       tm.Year = vComandos[0].toInt() - 1970;      // tmElements_t.Year is the offset from 1970
        RTC.write(tm);     
 
       setSyncProvider(RTC.get);
