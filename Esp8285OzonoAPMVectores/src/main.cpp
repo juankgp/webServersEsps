@@ -23,28 +23,33 @@ void setup() {
         Serial.println("Unable to sync with the RTC");
     else
         Serial.println("RTC has set the system time");
+EEPROM.begin(512);
+ for(int i=0;i<7;i++){
+      
+       vEeprom.push_back(EEPROM.read(addr+i));
+    }
 
- 
-  EEPROM.begin(512);
-  ton = EEPROM.read(addr);
+  
+  /*ton = EEPROM.read(addr);
   toff = EEPROM.read(addr+1);
   tHoraIni = EEPROM.read(addr+2);
   tMinIni = EEPROM.read(addr+3);
   tHoraFin = EEPROM.read(addr+4);
   tMinFin = EEPROM.read(addr+5);
-  estadoHorario = EEPROM.read(addr+6);
-  Serial << "Estado de horario " << estadoHorario << endl;
-  if(estadoHorario == 1){
-    Serial << "Alarmas creadas inicio: " << "Hora: " << tHoraIni <<
-    "Minuto: " << tMinIni << "FIN: " << tHoraFin << "Minuto: " << tMinFin << endl;
-    alarmHorarioOn =  Alarm.alarmRepeat(tHoraIni,tMinIni,0, AlarmHorarioON);  
-    alarmHorarioOff =  Alarm.alarmRepeat(tHoraFin,tMinFin,0, AlarmHorarioOFF);  
-    estadoHorario = true;
+  estadoHorario = EEPROM.read(addr+6);*/
+  Serial << "Estado de horario " << vEeprom[7] << endl;
+  if(vEeprom[6] == 1){
+    Serial << "Alarmas creadas inicio: " << "Hora: " << vEeprom[2] <<
+    "Minuto: " << vEeprom[3] << "FIN: " << vEeprom[4] << 
+    "Minuto: " << vEeprom[5]<< endl;
+    alarmHorarioOn =  Alarm.alarmRepeat(vEeprom[2],vEeprom[3],0, AlarmHorarioON);  
+    alarmHorarioOff =  Alarm.alarmRepeat(vEeprom[4],vEeprom[5],0, AlarmHorarioOFF);  
+    vEeprom[6] = true;
   }
   else
   {
     Serial << "Alarmas no creadas horario desactivad" << endl;
-    estadoHorario = false;
+    vEeprom[6] = false;
     Alarm.disable(alarmHorarioOn);
     Alarm.disable(alarmHorarioOff);
   }
@@ -54,9 +59,9 @@ void setup() {
   String(toff) + "Horario" + String(tHoraIni) + "-------"+ 
   String(tMinIni) + "-------"+ String(tHoraFin) + "-------"+
   String(tMinFin));*/
-  Serial << "Iniciando" << ton << "---" << toff <<
-  "Horario: " << tHoraIni << "----" << tMinIni <<
-  "---" << tHoraFin << "---" << tMinFin << endl;
+  Serial << "Iniciando" << vEeprom[0] << "---" << vEeprom[1] <<
+  "Horario: " << vEeprom[2] << "----" << vEeprom[3] <<
+  "---" << vEeprom[4] << "---" << vEeprom[5] << endl;
   //Serial.println("Tiempos guardados");
   Serial << "Tiempos Guardados" <<endl;
  

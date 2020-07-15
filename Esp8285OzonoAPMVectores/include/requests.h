@@ -6,6 +6,7 @@
 using std::vector;
 
 using VS=vector<String>;
+vector<byte> vEeprom;
 Separador s;
 
 
@@ -21,16 +22,16 @@ File myFile;
 const char* myFilePath = "/wifi.txt";
 
 
-bool estadoHorario = false;
-byte multipliSeg = 1;
+//bool estadoHorario = false;
+byte multipliSeg = 60;
 byte timeTrabajo = 20;
 byte addr = 0;
-byte ton = 0;
+/*byte ton = 0;
 byte toff = 0;
 byte tHoraIni = 0;
 byte tMinIni = 0;
 byte tHoraFin = 0;
-byte tMinFin = 0;
+byte tMinFin = 0;*/
 
 void writetxt(String datos){
    myFile = SPIFFS.open(myFilePath, "w");
@@ -87,7 +88,7 @@ void AlarmFunctionON(){
     Serial << "PrendoOzono" << endl;
   
     //Alarm.timerRepeat(timeHumo*60, AlarmFunctionOFF);
-    alarmWork=Alarm.timerOnce(ton*multipliSeg, AlarmFunctionOFF);  
+    alarmWork=Alarm.timerOnce(vEeprom[0]*multipliSeg, AlarmFunctionOFF);  
   }
   
   
@@ -96,7 +97,7 @@ void AlarmFunctionOFF(){
   if(work){
    digitalWrite(ozono,LOW);
     Serial << "ApagoOzono" << endl;
-    alarmEspera = Alarm.timerOnce(toff*multipliSeg, AlarmFunctionON);
+    alarmEspera = Alarm.timerOnce(vEeprom[1]*multipliSeg, AlarmFunctionON);
   }
   
 }
@@ -162,7 +163,7 @@ server.on("/arranque", HTTP_GET, [](AsyncWebServerRequest *request){
 
  server.on("/verifHorario", HTTP_GET, [](AsyncWebServerRequest *request){ 
     String cadena;
-    if(estadoHorario)
+    if(vEeprom[6])
       cadena = "true";
     else
       cadena = "false";
@@ -173,8 +174,8 @@ server.on("/arranque", HTTP_GET, [](AsyncWebServerRequest *request){
 server.on("/horasHorario", HTTP_GET, [](AsyncWebServerRequest *request){
     String cadena;
     
-    cadena = "Hora ON: " + String(tHoraIni) + ":" + String(tMinIni) +"<br>"+ "Hora OFF: " +
-     String(tHoraFin) + ":" + String(tMinFin);
+    cadena = "Hora ON: " + String(vEeprom[2]) + ":" + String(vEeprom[3]) +"<br>"+ "Hora OFF: " +
+     String(vEeprom[4]) + ":" + String(vEeprom[5]);
     
   request->send_P(200,"text/plain",cadena.c_str());
 });
@@ -240,12 +241,13 @@ server.on("/tiempodata", HTTP_GET, [](AsyncWebServerRequest *request){
       Serial << "Llego: " <<vComandos[i] << endl;
        
     }*/
-    
+      
       EEPROM.write(addr,vComandos[0].toInt());
       EEPROM.write(addr+1, vComandos[1].toInt());
       EEPROM.commit();
-      ton = vComandos[0].toInt();
-      toff =vComandos[1].toInt();
+      vEeprom[0] = vComandos[0].toInt();
+      vEeprom[1] =vComandos[1].toInt();
+      Serial << "Ton: " << vEeprom[0] << " Toff: " << vEeprom[1] << endl;
     }
     else {
       inputMessage = "No message sent";
@@ -282,15 +284,15 @@ server.on("/tiempodata", HTTP_GET, [](AsyncWebServerRequest *request){
       EEPROM.write(addr +4,vComandos[2].toInt());
       EEPROM.write(addr+5, vComandos[3].toInt());
       EEPROM.commit();
-      tHoraIni = vComandos[0].toInt();
-      tMinIni = vComandos[1].toInt();
-      tHoraFin = vComandos[2].toInt();
-      tMinFin = vComandos[3].toInt();
+      vEeprom[2] = vComandos[0].toInt();
+      vEeprom[3] = vComandos[1].toInt();
+      vEeprom[4] = vComandos[2].toInt();
+      vEeprom[5] = vComandos[3].toInt();
       Alarm.disable(alarmHorarioOn);
       Alarm.disable(alarmHorarioOff);
-      if(estadoHorario == true){
-        alarmHorarioOn =  Alarm.alarmRepeat(tHoraIni,tMinIni,0, AlarmHorarioON);  
-        alarmHorarioOff =  Alarm.alarmRepeat(tHoraFin,tMinFin,0, AlarmHorarioOFF);  
+      if(vEeprom[6] == true){
+        alarmHorarioOn =  Alarm.alarmRepeat(vEeprom[2],vEeprom[3],0, AlarmHorarioON);  
+        alarmHorarioOff =  Alarm.alarmRepeat(vEeprom[4],vEeprom[5],0, AlarmHorarioOFF);  
       }
       
     }
@@ -314,10 +316,10 @@ server.on("/activeHorario", HTTP_GET, [](AsyncWebServerRequest *request){
       String tdata = String(inputMessage);
      Serial << "ACTIVAR: "<< tdata << endl;
      if(tdata == "activado"){
-       estadoHorario = true;
+       vEeprom[6] = true;
 
-      alarmHorarioOn =  Alarm.alarmRepeat(tHoraIni,tMinIni,0, AlarmHorarioON);  
-      alarmHorarioOff =  Alarm.alarmRepeat(tHoraFin,tMinFin,0, AlarmHorarioOFF);  
+      alarmHorarioOn =  Alarm.alarmRepeat(vEeprom[2],vEeprom[3],0, AlarmHorarioON);  
+      alarmHorarioOff =  Alarm.alarmRepeat(vEeprom[4],vEeprom[5],0, AlarmHorarioOFF);  
       EEPROM.write(addr+6, 1);
       EEPROM.commit();
       Serial <<"Alarmas creadas de horario"<< endl;
@@ -327,7 +329,7 @@ server.on("/activeHorario", HTTP_GET, [](AsyncWebServerRequest *request){
        Serial <<"Alarmas desabilitadas de horario"<< endl;
        EEPROM.write(addr+6, 0);
       EEPROM.commit();
-       estadoHorario = false;
+       vEeprom[6] = false;
        Alarm.disable(alarmHorarioOn);
        Alarm.disable(alarmHorarioOff);
      }
