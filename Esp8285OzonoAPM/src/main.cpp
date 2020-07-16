@@ -14,8 +14,10 @@ void setup() {
 
   Serial.begin(115200);
   pinMode(ozono,OUTPUT);//ozono
+  pinMode(led,OUTPUT);//led
  Wire.begin(9, 10);
   digitalWrite(ozono,LOW);
+  digitalWrite(led,LOW);
    setSyncProvider(RTC.get);
 	setSyncInterval(300);
 

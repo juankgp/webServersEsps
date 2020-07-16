@@ -75,16 +75,19 @@ void AlarmHorarioON();
 
 void AlarmHorarioON(){
   digitalWrite(ozono,HIGH);
+  digitalWrite(led,HIGH);
   Serial << "Prendo Por Horario" << endl;
 }
 void AlarmHorarioOFF(){
   digitalWrite(ozono,LOW);
+  digitalWrite(led,LOW);
   Serial << "Apago Por Horario" << endl;
 }
 void AlarmFunctionON(){
   if (work)
   {
     digitalWrite(ozono,HIGH);
+    digitalWrite(led,HIGH);
     Serial << "PrendoOzono" << endl;
   
     //Alarm.timerRepeat(timeHumo*60, AlarmFunctionOFF);
@@ -96,6 +99,7 @@ void AlarmFunctionON(){
 void AlarmFunctionOFF(){
   if(work){
    digitalWrite(ozono,LOW);
+   digitalWrite(led,LOW);
     Serial << "ApagoOzono" << endl;
     alarmEspera = Alarm.timerOnce(vEeprom[1]*multipliSeg, AlarmFunctionON);
   }
@@ -106,6 +110,7 @@ void AlarmDisableWork(){
   work = false;
  // digitalWrite(humo,LOW);
   digitalWrite(ozono,LOW);
+  digitalWrite(led,LOW);
  
 }
  void requests(){
@@ -130,6 +135,7 @@ void AlarmDisableWork(){
   server.on("/onozono", HTTP_GET, [](AsyncWebServerRequest *request){
     Serial << "Prende ozono" << endl;
     digitalWrite(ozono,HIGH);
+    digitalWrite(led,HIGH);
     
    
     request->send(SPIFFS, "/config.html", String(), false, processor);
@@ -137,7 +143,7 @@ void AlarmDisableWork(){
   server.on("/offozono", HTTP_GET, [](AsyncWebServerRequest *request){
     Serial <<"apaga ozono" << endl;
     digitalWrite(ozono,LOW);
-    
+    digitalWrite(led,LOW);
     request->send(SPIFFS, "/config.html", String(), false, processor);
   });
   
@@ -156,6 +162,7 @@ server.on("/arranque", HTTP_GET, [](AsyncWebServerRequest *request){
     Alarm.disable(alarmEspera);
     //Alarm.timerOnce(toff*multipliSeg, AlarmFunctionOFF);
     digitalWrite(ozono,LOW);
+    digitalWrite(led,LOW);
     Serial << "Paro" << endl;
     request->send(SPIFFS, "/index.html", String(), false, processor);
   });

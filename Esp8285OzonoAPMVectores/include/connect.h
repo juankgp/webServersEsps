@@ -2,8 +2,8 @@
 #include <ESP8266mDNS.h>
 #include <Hash.h>
 #include "requests.h"
-char* ssid = "esp8285";
-char* password = "esp8285pass";
+char* ssid = "3FD Plus O3";
+char* password = "3fdplusO3";
 String wifiData="";
 
 boolean wifiConnect(char* host,boolean caso, String ssidtxt ,String passtext) {
