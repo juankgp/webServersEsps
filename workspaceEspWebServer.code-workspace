@@ -30,6 +30,9 @@
 		},
 		{
 			"path": "Esp8285OzonoHumoArchivos"
+		},
+		{
+			"path": "BancoPichinchaWebServer"
 		}
 	],
 	"settings": {
