@@ -1,35 +1,8 @@
 {
     "folders": [
 		{
-			"path": "Esp8285OzonoAPM"
-		},
-		{
-			"path": "Esp8285WebServerCOOL"
-		},
-		{
-			"path": "Esp8285OzonoHumo"
-		},
-		{
-			"path": "PruebaEsp07"
-		},
-		{
-			"path": "esp3LAmpCELChange/test"
-		},
-		{
-			"path": "esp3LAmpCELChange"
-		},
-		{
-			"path": "contorlLamparasBiosecurity"
-		},
-		{
-			"name": "OTAupdateEsp8266",
-			"path": "../OTAupdateEsp8266"
-		},
-		{
-			"path": "Esp8285OzonoAPMVectores"
-		},
-		{
-			"path": "Esp8285OzonoHumoArchivos"
+			"name": "webServersEsps",
+			"path": "."
 		}
 	],
 	"settings": {
