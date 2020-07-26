@@ -24,9 +24,6 @@ int cambioluz=0;
 #define MYSSID "FLA GUTIERREZ"
 #define PASSW "KYARALIBY"
 
-
-
-
 void setup() {
 #pragma region //Configuracio
   Serial.begin(115200);
