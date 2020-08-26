@@ -8,7 +8,10 @@
     <title>WebControl</title>
 </head>
 
-<body>
+<body>        
+    <div>
+        <img src="logo" alt="logo">
+    </div>
 
     <div id="mySidenav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
@@ -21,6 +24,8 @@
     <h2 class="titulo">Control--Estatus</h2>
     <article>
         <h1 class="titulo">Est. Ozono</h1>
+        <br>
+        <br>
         <div class="container">
             <div class="center">
                 <p class="" id="indicadorOZ"></p>
@@ -67,6 +72,7 @@
                         </td>
                         <td class="boton">
                             <p class="textHorario" id="horario">%HORARIO%</p>
+                            <p class="textHorario" id="hora">%HORA%</p>
                             <a href="/activeHorario?value=prube" id="iniHorario">
                                 <input class="checHorario" type="checkbox" id="tHorario" value="">
 
@@ -82,10 +88,24 @@
                 </table>
             </div>
         </div>
-
+       
     </article>
-
-
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    
+    <article>
+        <div class="container">
+            <div class="center">
+               
+            </div>
+        </div>
+    </article>
+    
 </body>
 <script>
     function getHorario(element) {
@@ -148,6 +168,17 @@
             }
         };
         xhttp.open("GET", "/horasHorario", true);
+        xhttp.send();
+    }, 1000);
+
+    setInterval(function() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("hora").innerHTML = this.responseText;
+            }
+        };
+        xhttp.open("GET", "/horasH", true);
         xhttp.send();
     }, 1000);
 

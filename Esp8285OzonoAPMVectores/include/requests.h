@@ -114,6 +114,7 @@ void AlarmDisableWork(){
  
 }
  void requests(){
+
      server.on("/logo", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(SPIFFS, "/logo.png", "image/png");
   });
@@ -183,6 +184,13 @@ server.on("/horasHorario", HTTP_GET, [](AsyncWebServerRequest *request){
     
     cadena = "Hora ON: " + String(vEeprom[2]) + ":" + String(vEeprom[3]) +"<br>"+ "Hora OFF: " +
      String(vEeprom[4]) + ":" + String(vEeprom[5]);
+    
+  request->send_P(200,"text/plain",cadena.c_str());
+});
+server.on("/horasH", HTTP_GET, [](AsyncWebServerRequest *request){
+    String cadena;
+    
+    cadena = String(hour()) + ":" + String(minute()) + ":" + String(second());
     
   request->send_P(200,"text/plain",cadena.c_str());
 });
