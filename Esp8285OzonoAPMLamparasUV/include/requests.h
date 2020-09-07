@@ -379,7 +379,7 @@ server.on("/ini", HTTP_GET, [](AsyncWebServerRequest *request){//sincronizoReloj
       Serial << "Hora Actual: "<< vComandos[3]<< "-" << vComandos[4] << "-" << vComandos[5] << 
       "-" << vComandos[2] << "-" <<  (vComandos[1].toInt()+1) << "-" << vComandos[0] << endl;
 
-      tmElements_t tm;00000000000000000000000000000000000000000000000000000000000000000000000000000000000
+      tmElements_t tm;
       tm.Hour = vComandos[3].toInt();               // set the RTC to an arbitrary time
        tm.Minute = vComandos[4].toInt();
        tm.Second = vComandos[5].toInt()+1;
