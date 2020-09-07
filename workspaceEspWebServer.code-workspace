@@ -33,6 +33,9 @@
 		},
 		{
 			"path": "BancoPichinchaWebServer"
+		},
+		{
+			"path": "Esp8285OzonoAPMLamparasUV"
 		}
 	],
 	"settings": {
