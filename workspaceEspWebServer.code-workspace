@@ -36,6 +36,10 @@
 		},
 		{
 			"path": "Esp8285OzonoAPMLamparasUV"
+		},
+		{
+			"name": "esp8285init",
+			"path": "../esp8285init"
 		}
 	],
 	"settings": {
