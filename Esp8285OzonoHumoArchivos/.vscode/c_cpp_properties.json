@@ -8,6 +8,7 @@
             "includePath": [
                 "/home/juank/Documents/PlatformIO/Projects/webServersEsps/Esp8285OzonoHumoArchivos/include",
                 "/home/juank/Documents/PlatformIO/Projects/webServersEsps/Esp8285OzonoHumoArchivos/src",
+                "/home/juank/.platformio/lib/separador",
                 "/home/juank/.platformio/packages/framework-arduinoespressif8266/libraries/Wire",
                 "/home/juank/.platformio/packages/framework-arduinoespressif8266/libraries/Hash/src",
                 "/home/juank/.platformio/packages/framework-arduinoespressif8266/libraries/ESP8266mDNS/src",
@@ -50,6 +51,7 @@
                 "path": [
                     "/home/juank/Documents/PlatformIO/Projects/webServersEsps/Esp8285OzonoHumoArchivos/include",
                     "/home/juank/Documents/PlatformIO/Projects/webServersEsps/Esp8285OzonoHumoArchivos/src",
+                    "/home/juank/.platformio/lib/separador",
                     "/home/juank/.platformio/packages/framework-arduinoespressif8266/libraries/Wire",
                     "/home/juank/.platformio/packages/framework-arduinoespressif8266/libraries/Hash/src",
                     "/home/juank/.platformio/packages/framework-arduinoespressif8266/libraries/ESP8266mDNS/src",

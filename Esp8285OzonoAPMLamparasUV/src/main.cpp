@@ -11,7 +11,6 @@
 
 void setup() {
 
-
   Serial.begin(115200);
   pinMode(ac1,OUTPUT);//ozono
   pinMode(ac2,OUTPUT);//led
